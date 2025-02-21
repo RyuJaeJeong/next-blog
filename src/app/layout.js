@@ -6,8 +6,13 @@ export default function RootLayout({ children }) {
     <html lang="ko">
       <body>
         <div className={"w-full h-[150VH] min-h-screen"}>
-            <Navbar />
-            {children}
+            <div className={"w-full h-[4rem]"}>
+                <Navbar />
+            </div>
+            <div className={"w-full h-auto"}>
+                {children}
+            </div>
+
         </div>
       </body>
     </html>
