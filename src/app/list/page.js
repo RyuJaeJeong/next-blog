@@ -26,7 +26,7 @@ export default function List() {
                 {
                     list.map((data, key)=>{
                         return (
-                            <div className={"basis-1/5 overflow-hidden h-full bg-white px-4 py-4 shadow-md"} key={key}>
+                            <div className={"basis-1/5 overflow-hidden h-full bg-white px-4 py-4 shadow-md cursor-pointer transition duration-300 hover:-translate-y-3"} key={key}>
                                 <div className={"w-full h-1/5 text-base font-bold overflow-hidden text-ellipsis whitespace-nowrap font-sans"}>
                                    {data.title}
                                 </div>
