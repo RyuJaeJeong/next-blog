@@ -3,8 +3,8 @@ import Image from "next/image";
 
 const Navbar = () => {
     return(
-        <div className={"block fixed w-full h-[4rem] border-b border-gray-400 bg-white"}>
-            <div className={"block w-[90%] md:w-[70%] h-[4rem] m-auto"}>
+        <div className={"block w-full h-[4rem] border-b border-gray-400 bg-white"}>
+            <div className={"block w-[90%] md:w-[60%] h-[4rem] m-auto"}>
                 <div className={"flex flex-row justify-between w-full h-full px-2 py-4 gap-2"}>
                     <div className={"basis-[5%] flex items-center justify-center h-full "}>
                         <Link href={"#"}>
