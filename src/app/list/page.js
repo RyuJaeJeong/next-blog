@@ -1,3 +1,5 @@
+import Card from "@/src/components/Card";
+
 export default function List() {
     const list = [
         {
@@ -46,23 +48,11 @@ export default function List() {
     ]
     return (
         <div className={"w-4/5 md:w-3/5 h-full mx-auto px-2 py-10"}>
-            <div className={"grid lg:grid-cols-3 xl:grid-cols-4 md:gap-x-4 gap-y-4 xl:gap-y-8 w-full h-auto py-5"}>
+            <div className={"grid lg:grid-cols-3 xl:grid-cols-5 md:gap-x-4 gap-y-4 xl:gap-y-8 w-full h-auto py-5"}>
                 {
                     list.map((data, key)=>{
                         return (
-                            <div className={"overflow-hidden h-[12.5rem] bg-white px-4 py-4 shadow-md cursor-pointer lg:transition lg:duration-300 lg:hover:-translate-y-3"} key={key}>
-                                <div className={"w-full h-1/5 text-base font-bold truncate"}>
-                                   {data.title}
-                                </div>
-                                <div className={"w-full h-3/5 line-clamp-5 text-sm font-2 "}>
-                                    {data.contents}
-                                </div>
-                                <div className={"w-full h-1/5 overflow-hidden flex items-end"}>
-                                    <p className={"text-xs overflow-ellipsis font-sans font-2"}>
-                                        {data.date}
-                                    </p>
-                                </div>
-                            </div>
+                            <Card title={data.title} contents={data.contents} date={data.date} index={key} key={key} />
                         )
                     })
                 }
