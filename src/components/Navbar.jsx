@@ -7,7 +7,7 @@ const Navbar = () => {
     const router = useRouter();
     return(
         <div className={"block w-full h-[5VH] border-b border-gray-400 bg-white"}>
-            <div className={"block w-[90%] md:w-[60%] h-[4rem] m-auto"}>
+            <div className={"block w-[90%] md:w-[60%] h-[5VH] m-auto"}>
                 <div className={"flex flex-row justify-between w-full h-full px-2 py-4 gap-2"}>
                     <div className={"basis-[5%] flex items-center justify-center h-full "}>
                         <Link href={"#"}>
