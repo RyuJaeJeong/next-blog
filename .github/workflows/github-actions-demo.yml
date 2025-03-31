@@ -9,6 +9,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Install Dependencies
         run: npm install
-      - name: Install Dependencies
-        run: nohup npm run dev > /dev/null 2>&1 &
+      - name: start next.js
+        run: npm run dev
         
