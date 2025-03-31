@@ -10,5 +10,5 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Install Dependencies
-        run: npm run dev
+        run: npm run dev &
         
