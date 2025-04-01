@@ -7,14 +7,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18.20.4  
       - name: Install Dependencies
         run: npm install
       - name: build project
         run: npm run build
       - name: start project
-        run: nohup npm run start > output2.log 2>&1 &
+        run: nohup npm run start > output3.log 2>&1 &
    
         
