@@ -1,5 +1,5 @@
 name: deploy next-blog
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} is deploy next-blog 🚀
 on: [push]
 jobs:
   Explore-GitHub-Actions:
@@ -11,6 +11,12 @@ jobs:
         run: npm install
       - name: build project
         run: npm run build
+      - name: Install PM2
+        run: npm install -g pm2
+      - name: startup PM2
+        run: pm2 startup  
+      - name: Stop Existing Process (if running)
+        run: pm2 delete next-blog || true
       - name: Start Project with PM2
         run: pm2 start npm --name "next-blog" -- run start
       - name: Save PM2 Process List
