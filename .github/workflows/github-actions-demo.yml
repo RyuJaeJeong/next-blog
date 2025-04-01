@@ -11,7 +11,13 @@ jobs:
         run: npm install
       - name: build project
         run: npm run build
-      - name: start project
-        run: nohup npm run start > output3.log 2>&1 &
+      - name: Install PM2
+        run: npm install -g pm2
+      - name: Stop Existing Process (if running)
+        run: pm2 delete next-blog || true
+      - name: Start Project with PM2
+        run: pm2 start npm --name "next-blog" -- run start
+      - name: Save PM2 Process List
+        run: pm2 save
    
         
