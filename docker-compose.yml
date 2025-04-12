@@ -4,9 +4,12 @@
 #services:
 #  컨테이너이름:
 # docker compose up -d (d는 백그라운드 실행 원할 경우)
+# docker compose up --watch
+# graceful shutdown
+
 services:
   next-blog:
-    image: next-blog:1.0.0
+#    image: next-blog:1.0.0
     ports:
       - 3000:3000
     networks:
@@ -14,6 +17,13 @@ services:
         ipv4_address: 172.18.0.2
     environment:
       TZ: "Asia/Seoul"
+    build: .
+    develop:
+      watch:
+#        -  action: sync+restart
+        -  action: rebuild
+           path: .
+           target: .
     restart: always
 
   nginx:
