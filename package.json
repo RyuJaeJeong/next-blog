@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/colors": "^8.0.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "antd": "^5.24.6",
     "mysql2": "^3.13.0",
