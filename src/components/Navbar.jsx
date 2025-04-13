@@ -1,6 +1,6 @@
 const Navbar = () => {
     return (
-        <div className="navbar bg-[#F6F7F8]">
+        <div className="navbar h-full bg-[#F6F7F8]">
             <div className="flex-1">
                 <a className="font-bold text-xl cursor-pointer select-none">
                     Next.log()
