@@ -1,26 +1,29 @@
-'use client'
-import Link from 'next/link'
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-
 const Navbar = () => {
-    const router = useRouter();
-    return(
-        <div className={"block w-full h-[5VH] border-b border-gray-400 bg-white"}>
-            <div className={"block w-[90%] md:w-[60%] h-[4rem] m-auto"}>
-                <div className={"flex flex-row justify-between w-full h-full px-2 py-4 gap-2"}>
-                    <div className={"basis-[5%] flex items-center justify-center h-full "}>
-                        <Link href={"#"}>
-                            <p className={"text-3xl"}>Logo</p>
-                        </Link>
+    return (
+        <div className="navbar bg-[#F6F7F8]">
+            <div className="flex-1">
+                <a className="font-bold text-xl cursor-pointer select-none">
+                    Next.log()
+                </a>
+            </div>
+            <div className="navbar-end">
+                <button className="btn btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+                <button className="btn btn-ghost btn-circle">
+                    <div className="indicator">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                        </svg>
+                        <span className="badge badge-xs badge-primary indicator-item"></span>
                     </div>
-                    <div className={"basis-auto flex gap-2 items-center h-full"}>
-                        <button onClick={ ()=> router.push('/write') } className={"bg-black hidden md:inline px-2 py-2 w-[6rem] h-10 text-white font-bold text-[1rem] rounded-md transition duration-300 hover:bg-gray-800 active:bg-gray-700"}>
-                            작성하기
-                        </button>
-                        <Image src={"/profile.jpg"} alt={"profile"} width={40} height={40} className={"border border-gray-300 rounded-[20rem] cursor-pointer hover:opacity-50"}></Image>
-                    </div>
-                </div>
+                </button>
             </div>
         </div>
     )
