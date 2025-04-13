@@ -1,18 +1,25 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: deploy next-blog
+run-name: ${{ github.actor }} is deploy next-blog 🚀
 on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: [self-hosted, linux, x64]
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Install Dependencies
+        run: npm install
+      - name: build project
+        run: npm run build
+      - name: Install PM2
+        run: npm install -g pm2
+      - name: startup PM2
+        run: pm2 startup  
+      - name: Stop Existing Process (if running)
+        run: pm2 delete next-blog || true
+      - name: Start Project with PM2
+        run: pm2 start npm --name "next-blog" -- run start
+      - name: Save PM2 Process List
+        run: pm2 save
+   
+        
