@@ -1,15 +1,11 @@
 import mysql from 'mysql2/promise';
 
-const host = "127.0.0.1";
-const user = "root";
-const password = "8998";
-const database = "next-blog";
-
 const pool = mysql.createPool({
-    host: host,
-    user: user,
-    password: password,
-    database: database
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: process.env.DB_NAME,
+    connectionLimit: process.env.CONNECTION_LIMIT,
 });
 
 export default pool
