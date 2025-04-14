@@ -5,7 +5,7 @@ const nextConfig = {
         DB_USER: "next-blog",
         DB_PWD: "8998",
         DB_NAME: "next-blog",
-        CONNECTION_LIMIT: 10
+        CONNECTION_LIMIT: "10"
     }
 };
 
