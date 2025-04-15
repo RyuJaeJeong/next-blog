@@ -10,7 +10,8 @@ export default async function handler(req, res){
         const data = {};
         try{
             var conn = await pool.getConnection();
-            const param = req.body
+            const param = JSON.parse(req.body)
+
             const result = await conn.query({
                 sql: 'INSERT INTO t_board(title, contents) VALUES(? , ?)'
             }, [param.title, param.contents]);
