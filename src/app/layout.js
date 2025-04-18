@@ -7,14 +7,16 @@ export default function RootLayout({ children }) {
     <html lang="ko" className={"bg-[#F6F7F8]"}>
       <body>
         <div className={"w-full min-h-screen"}>
-            <div className={"md:w-2/3 h-[100VH] mx-auto"}>
-                <div className="w-full h-16">
+            <div className={"w-full h-[100VH]"}>
+                <div className="md:w-2/3 mx-auto h-16">
                     <Navbar/>
                 </div>
-                <div className={"w-full h-[calc(100VH-8rem)] bg-red"}>
-                    {children}
+                <div className={"w-full h-[calc(100VH-8rem)] overflow-scroll"}>
+                    <div className={"md:w-2/3 h-screen mx-auto"}>
+                        {children}
+                    </div>
                 </div>
-                <div className="w-full h-16">
+                <div className="md:w-2/3 mx-auto h-16">
                     <Footer/>
                 </div>
             </div>
