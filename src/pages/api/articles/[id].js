@@ -27,28 +27,5 @@ export default async function handler(req, res){
             if(conn) conn.release()
         }
         return res.status(200).json(data);
-    }else if(req.method === 'POST'){
-        try{
-            const formData = req.body
-            formData.updDttm = moment().format('YYYY-MM-DD HH:mm:SS')
-            const client = await connectDB;
-            const db = client.db('forum');
-            await db.collection('post').updateOne({ _id : new ObjectId(id) }, { $set: formData })
-            return res.status(200).redirect('/list')
-        }catch (e) {
-            console.error(e)
-            return res.status(500).json('실패했음')
-        }
-    }else if(req.method === 'DELETE'){
-        try{
-            const id = req.query.id
-            const client = await connectDB;
-            const db = client.db('forum');
-            let result = await db.collection('post').deleteOne({_id : new ObjectId(id)})
-            return res.status(200).json({ message : '삭제 성공' })
-        }catch (e) {
-            console.error(e);
-            return res.status(500).json({ message : '삭제 실패' })
-        }
     }
 }
