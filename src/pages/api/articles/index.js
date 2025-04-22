@@ -1,12 +1,7 @@
 import pool from '@/src/utils/db_con'
 
 export default async function handler(req, res){
-    if(req.method === 'GET'){
-        var conn = await pool.getConnection();
-        const [rows] = await conn.query("SELECT now()")
-        console.log(rows)
-        return res.status(200).json({ "str" : "finish" });
-    }else if(req.method === 'POST'){
+    if(req.method === 'POST'){
         const data = {};
         try{
             var conn = await pool.getConnection();
@@ -18,10 +13,12 @@ export default async function handler(req, res){
             
             if(result[0].affectedRows > 0){
                 data.code = 1;
-                data.message = "처리성공";    
+                data.message = "처리성공";
+                data.data = result
             }else{
                 data.code = 0;
                 data.message = "영향을 끼치지 않았습니다";
+                data.data = null;
             }
 
             return res.status(200).json(data);
@@ -49,9 +46,11 @@ export default async function handler(req, res){
             if(result[0].affectedRows > 0){
                 data.code = 1;
                 data.message = "처리성공";
+                data.data = result;
             }else{
                 data.code = 0;
                 data.message = "영향을 끼치지 않았습니다";
+                data.data = null;
             }
 
             return res.status(200).json(data);
