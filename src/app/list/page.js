@@ -1,4 +1,5 @@
 import Card from "@/src/components/Card";
+import BtnGoList from "@/src/app/list/BtnGoWrite";
 
 export default async function List(props) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -10,15 +11,60 @@ export default async function List(props) {
     const list = data.data;
 
     return (
-        <div className={"w-full h-full mx-auto px-2 py-10"}>
-            <div className={"grid lg:grid-cols-3 xl:grid-cols-5 md:gap-x-4 gap-y-4 xl:gap-y-8 w-full h-auto py-5"}>
-                {
-                    list.map((data, key)=>{
-                        return (
-                            <Card title={data.title} contents={data.contents} date={data.date} index={key} key={key} />
-                        )
-                    })
-                }
+
+        <div className={"w-full h-full"}>
+            <div className={"flex justify-between prose max-w-none w-full h-[8%] "}>
+                <div className={"w-auto h-full flex items-center"}>
+                    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=list"/>
+                    <span className="material-symbols-outlined">
+                      list
+                    </span>
+                    <h3 className={"my-0"}>
+                        &nbsp;목록
+                    </h3>
+                </div>
+                <div className={"w-auto h-full flex items-center"}>
+                    <BtnGoList/>
+                </div>
+            </div>
+            <div className={"w-full h-[84%]"}>
+                <div className="overflow-x-auto">
+                    <table className="table block my-auto ">
+                        <thead>
+                            <tr>
+                                <th width={"10%"}></th>
+                                <th width={"50%"} className={"text-center"}>제목</th>
+                                <th width={"20%"} className={"text-center"}>입력일자</th>
+                                <th width={"20%"} className={"text-center"}>수정일자</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {
+                            list.map((data)=> (
+                                <tr key={data.id} className="hover:bg-base-300 cursor-pointer">
+                                    <th>{data.id}</th>
+                                    <td>{data.title}</td>
+                                    <td className={"text-center"}>{data.inpDttm}</td>
+                                    <td className={"text-center"}>{data.updDttm}</td>
+                                </tr>
+                            ))
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className={"flex items-center justify-center w-full h-[8%] "}>
+                <div className="join">
+                    <button className="bg-white join-item btn">1</button>
+                    <button className="bg-white join-item btn">2</button>
+                    <button className="bg-white join-item btn">3</button>
+                    <button className="bg-white join-item btn">4</button>
+                    <button className="bg-white join-item btn">5</button>
+                    <button className="bg-white join-item btn">6</button>
+                    <button className="bg-white join-item btn">7</button>
+                    <button className="bg-white join-item btn">8</button>
+                    <button className="bg-white join-item btn">9</button>
+                </div>
             </div>
         </div>
     );
