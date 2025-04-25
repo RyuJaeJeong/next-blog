@@ -6,26 +6,20 @@ export default async function handler(req, res){
         try{
             var conn = await pool.getConnection();
             let sql = "SELECT T1.id" +
-                ", T1.title" +
-                ", T1.contents" +
-                ", T1.inp_dttm AS inpDttm" +
-                ", DATE_FORMAT(T1.upd_dttm, '%y년 %m월') AS updDttm " +
-                "FROM t_board T1" +
-                " WHERE 1 = 1"  +
-                "   AND T1.delete_yn = 0 ";
-            const pageData = req.query;
-            const pageNo = pageData.pageNo;
-            const contentsSize = 20;
-            let stNum = 1;
-
-
-            if(pageNo){
-                stNum = ((pageNo - 1) * contentsSize);
-            }
-
+                                  ", T1.title" +
+                                  ", T1.contents" +
+                                  ", T1.inp_dttm AS inpDttm" +
+                                  ", DATE_FORMAT(T1.upd_dttm, '%y년 %m월') AS updDttm " +
+                               "FROM t_board T1" +
+                             " WHERE 1 = 1"  +
+                               " AND T1.delete_yn = 0 ";
+            const pageNo = req.query.pageNo || 1;
+            const contentsSize = 30;
+            let stNum = (pageNo - 1) * contentsSize;
             sql += "LIMIT ?, ?"
-
+            console.log(sql)
             const rows = await conn.query(sql, [stNum, contentsSize]);
+            console.log(rows)
             data.code = 200;
             data.message = "처리성공";
             data.data = rows[0];

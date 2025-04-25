@@ -10,7 +10,7 @@ export default async function List(props) {
     const list = data.data;
 
     return (
-        <div className={"w-5/6 h-full mx-auto px-2 py-10"}>
+        <div className={"w-full h-full mx-auto px-2 py-10"}>
             <div className={"grid lg:grid-cols-3 xl:grid-cols-5 md:gap-x-4 gap-y-4 xl:gap-y-8 w-full h-auto py-5"}>
                 {
                     list.map((data, key)=>{
