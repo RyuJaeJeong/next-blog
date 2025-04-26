@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
                     <Navbar/>
                 </div>
                 <div className={"w-full h-[calc(100VH-8rem)] overflow-scroll"}>
-                    <div className={"md:w-2/3 h-screen mx-auto"}>
+                    <div className={"md:w-2/3 h-full mx-auto"}>
                         {children}
                     </div>
                 </div>

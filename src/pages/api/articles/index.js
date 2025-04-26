@@ -7,14 +7,13 @@ export default async function handler(req, res){
             var conn = await pool.getConnection();
             let sql = "SELECT T1.id" +
                                   ", T1.title" +
-                                  ", T1.contents" +
-                                  ", T1.inp_dttm AS inpDttm" +
-                                  ", DATE_FORMAT(T1.upd_dttm, '%y년 %m월') AS updDttm " +
+                                  ", DATE_FORMAT(T1.inp_dttm, '%Y-%m-%d') AS inpDttm" +
+                                  ", DATE_FORMAT(T1.upd_dttm, '%Y-%m-%d') AS updDttm " +
                                "FROM t_board T1" +
                              " WHERE 1 = 1"  +
                                " AND T1.delete_yn = 0 ";
             const pageNo = req.query.pageNo || 1;
-            const contentsSize = 30;
+            const contentsSize = 13;
             let stNum = (pageNo - 1) * contentsSize;
             sql += "LIMIT ?, ?"
             console.log(sql)
