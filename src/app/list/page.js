@@ -1,5 +1,6 @@
 import Card from "@/src/components/Card";
 import BtnGoList from "@/src/app/list/BtnGoWrite";
+import Pager from "@/src/app/list/pager";
 
 export default async function List(props) {
     const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -53,19 +54,7 @@ export default async function List(props) {
                     </table>
                 </div>
             </div>
-            <div className={"flex items-center justify-center w-full h-[8%] "}>
-                <div className="join">
-                    <button className="bg-white join-item btn">1</button>
-                    <button className="bg-white join-item btn">2</button>
-                    <button className="bg-white join-item btn">3</button>
-                    <button className="bg-white join-item btn">4</button>
-                    <button className="bg-white join-item btn">5</button>
-                    <button className="bg-white join-item btn">6</button>
-                    <button className="bg-white join-item btn">7</button>
-                    <button className="bg-white join-item btn">8</button>
-                    <button className="bg-white join-item btn">9</button>
-                </div>
-            </div>
+            <Pager />
         </div>
     );
 }
