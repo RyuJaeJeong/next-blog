@@ -1,18 +1,23 @@
-import Card from "@/src/components/Card";
 import BtnGoList from "@/src/app/list/BtnGoWrite";
 import Pager from "@/src/app/list/pager";
 
 export default async function List(props) {
     const API_URL = process.env.API_URL
     const params = await props.searchParams;
-    let url = `${API_URL}/api/articles`
-    if(params.pageNo) url += `?pageNo=${params.pageNo}`
-    const result = await fetch(url);
-    const data = await result.json();
-    const list = data.data;
+    const pageNo = parseInt(params.pageNo || "1", 10);
+    let list = []
+    let pageData = null;
+    try{
+        const url = `${API_URL}/api/articles?pageNo=${pageNo}`
+        const response = await fetch(url);
+        const body = await response.json();
+        list = body.data;
+        pageData = body.pageData;
+    }catch (e) {
+        console.error("에러 입니다", e)
+    }
 
     return (
-
         <div className={"w-full h-full"}>
             <div className={"flex justify-between prose max-w-none w-full h-[8%] "}>
                 <div className={"w-auto h-full flex items-center"}>
@@ -28,7 +33,7 @@ export default async function List(props) {
                     <BtnGoList/>
                 </div>
             </div>
-            <div className={"w-full h-[84%]"}>
+            <div className={"w-full h-auto mb-5"}>
                 <div className="overflow-x-auto">
                     <table className="table block my-auto ">
                         <thead>
@@ -54,7 +59,7 @@ export default async function List(props) {
                     </table>
                 </div>
             </div>
-            <Pager />
+            <Pager pageData={pageData} currentPageNo={pageNo} />
         </div>
     );
 }

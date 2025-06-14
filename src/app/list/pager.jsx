@@ -1,21 +1,43 @@
 'use client'
 import { useRouter } from 'next/navigation'
 
-const Pager = ()=> {
+const Pager = (props)=> {
+    const pageData = props.pageData;
+    const currentPageNo = parseInt(props.currentPageNo, 10)
+    const pageList = Array.from({length: pageData.lastPage - pageData.startPage + 1},
+        (e, i) => i+ pageData.startPage
+    );
     const router = useRouter()
+    const goPage = (pageNo)=>{
+        router.push(`/list?pageNo=${pageNo}`)
+    }
     return (
         <div className={"flex items-center justify-center w-full h-[8%] "}>
-                <div className="join">
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=1') }}>1</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=2') }}>2</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=3') }}>3</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=4') }}>4</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=5') }}>5</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=6') }}>6</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=7') }}>7</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=8') }}>8</button>
-                    <button className="bg-white join-item btn" onClick={() => { router.push('/list?pageNo=9') }}>9</button>
-                </div>
+            <div className="join">
+                <button className={`join-item btn ${(pageData.startPage > pageData.blockSize)?"":"hidden"}`}
+                        onClick={()=>{
+                            goPage(pageData.startPage - pageData.blockSize)
+                        }}>
+                    «
+                </button>
+                {
+                    pageList.map((pageNo) => (
+                        <button key={pageNo}
+                                className={`join-item btn ${(pageNo === currentPageNo ? "btn-active" : "")}`}
+                                onClick={() => {
+                                    goPage(pageNo)
+                                }}>
+                            {pageNo}
+                        </button>
+                    ))
+                }
+                <button className={`join-item btn ${(pageData.lastPage < pageData.totalPage)?"":"hidden"}`}
+                        onClick={()=>{
+                            goPage(pageData.startPage + pageData.blockSize)
+                        }}>
+                    »
+                </button>
+            </div>
         </div>
     )
 }

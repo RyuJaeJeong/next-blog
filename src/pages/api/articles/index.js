@@ -13,7 +13,7 @@ export default async function handler(req, res){
                              " WHERE 1 = 1"  +
                                " AND T1.delete_yn = 0 ";
             const pageNo = req.query.pageNo || 1;
-            const pageSize = 15;
+            const pageSize = 10;
             const totalRecord = await getTotalRecord();
             const pageData = pager(pageSize, 10, totalRecord, pageNo);
 
@@ -105,15 +105,16 @@ export default async function handler(req, res){
 
 
 function pager(pageSize, blockSize, totalRecord, pageNo){
+    console.log("pageNo : ",pageNo)
     const startRecord = pageSize * (pageNo - 1);
-    let lastRecord = pageSize * pageNo;
+    let lastRecord = pageSize * pageNo - 1;
     if(lastRecord > totalRecord) lastRecord = totalRecord
     let totalPage = 0;
     let startPage = 1;
     let lastPage = 1;
     if(totalRecord > 0){
-        totalPage = totalRecord / pageSize + (totalRecord % pageSize == 0 ? 0 : 1)
-        startPage = (pageNo / blockSize - (pageNo % blockSize != 0 ? 0 : 1)) * blockSize + 1;
+        totalPage = Math.floor(totalRecord/pageSize)+(totalRecord%pageSize==0?0:1)
+        startPage = (Math.floor(pageNo/blockSize)-(pageNo%blockSize!== 0?0:1))*blockSize+1;
         lastPage = startPage + blockSize - 1
         if(lastPage > totalPage) lastPage = totalPage
     }
@@ -122,7 +123,8 @@ function pager(pageSize, blockSize, totalRecord, pageNo){
         "lastRecord":lastRecord,
         "totalPage":Math.ceil(totalPage),
         "startPage":startPage,
-        "lastPage":lastPage
+        "lastPage":lastPage,
+        "blockSize":blockSize
     }
 }
 
