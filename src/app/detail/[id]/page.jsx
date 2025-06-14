@@ -7,7 +7,7 @@ import {notFound} from "next/navigation";
 const Detail = async (props) => {
     const params = await props.params
     const id = params.id
-    const API_URL = process.env.NEXT_PUBLIC_API_URL
+    const API_URL = process.env.API_URL
     const result = await fetch(`${API_URL}/api/articles/${id}`);
     const data = await result.json();
     if(data.data.length <= 0) return notFound()

@@ -4,7 +4,7 @@ import Modal from '@/src/components/Modal'
 const BtnDelete = (props)=>{
     const id = props.id;
     const className = props.className;
-    const API_URL = process.env.NEXT_PUBLIC_API_URL
+    const API_URL = process.env.API_URL
     const doDel = async () => {
         try{
             const result = await fetch(`${API_URL}/api/articles/${id}`, {

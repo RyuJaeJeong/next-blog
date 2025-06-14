@@ -16,7 +16,7 @@ const Modify = () => {
     const [btnText, setBtnText] = useState(null);
     const [btnFunction, setBtnFunction] = useState(null);
     const [modalIsClose, setModalIsClose] = useState(true);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL
+    const API_URL = process.env.API_URL
 
     useEffect(()=>{
         fetch(`${API_URL}/api/articles/${id}`).then(async (res)=>{

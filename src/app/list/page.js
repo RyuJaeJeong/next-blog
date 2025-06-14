@@ -3,7 +3,7 @@ import BtnGoList from "@/src/app/list/BtnGoWrite";
 import Pager from "@/src/app/list/pager";
 
 export default async function List(props) {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL
+    const API_URL = process.env.API_URL
     const params = await props.searchParams;
     let url = `${API_URL}/api/articles`
     if(params.pageNo) url += `?pageNo=${params.pageNo}`
