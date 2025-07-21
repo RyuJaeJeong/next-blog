@@ -29,7 +29,7 @@ const Header = (props) => {
                 </div>
             </nav>
             <header className="masthead">
-                <Image src={`${props.image}`} alt={"header 배경 이미지"} fill={true} style={{objectFit: "cover", objectPosition:"center", filter: 'brightness(0.5)'}} />
+                <Image src={`${props.image}`} alt={"header 배경 이미지"} fill={true} style={{objectFit: "cover", objectPosition:"center", filter: 'brightness(0.5)'}} priority={true} />
                 <div className="container position-relative px-4 px-lg-5">
                     <div className="row gx-4 gx-lg-5 justify-content-center">
                         <div className="col-md-10 col-lg-8 col-xl-7">
