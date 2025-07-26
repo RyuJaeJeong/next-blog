@@ -17,7 +17,7 @@ const home = ()=>{
   }, [])
 
   const getTime = ()=> {
-    fetch('http://localhost:3000/api/test').then((res)=>{
+    fetch(`/api/test`).then((res)=>{
       return res.json()
     }).then((data)=>{
       setCurrentTime(data.now.now)
