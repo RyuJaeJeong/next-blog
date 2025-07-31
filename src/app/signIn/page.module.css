@@ -1,0 +1,11 @@
+.loginBox {
+    width: 25% !important;
+    margin-bottom: 4rem;
+}
+
+@media (max-height: 960px) {
+    .loginBox {
+        width: 90% !important;
+        margin-bottom: 3rem;
+    }
+}

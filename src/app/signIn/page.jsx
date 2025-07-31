@@ -1,5 +1,6 @@
 import { signIn } from "@/auth"
 import Header from "@/component/header";
+import styles from "@/app/signIn/page.module.css"
 
 export default function SignIn() {
     return (
@@ -11,8 +12,7 @@ export default function SignIn() {
                     formData.append("redirectTo", "/")
                     await signIn("credentials", formData)
                 }}
-                className={"w-25 mx-auto shadow p-3 bg-body-tertiary rounded"}
-                style={{marginBottom: "4rem"}}
+                className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
             >
                 <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
