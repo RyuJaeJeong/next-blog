@@ -1,29 +1,7 @@
-'use client'
-import Link from 'next/link'
 import Header from '@/component/header'
-import {useEffect, useState} from "react";
+import { auth } from "@/auth"
 
-const home = ()=>{
-  const [currentTime, setCurrentTime] = useState("")
-  useEffect(()=>{
-    getTime()
-    const timer = setInterval(()=>{
-      getTime()
-    }, 1000)
-
-    return () => {
-      clearInterval(timer)
-    }
-  }, [])
-
-  const getTime = ()=> {
-    fetch(`/api/test`).then((res)=>{
-      return res.json()
-    }).then((data)=>{
-      setCurrentTime(data.now.now)
-    })
-  }
-
+const home = async ()=>{
   return(
       <>
         <Header image={"/about-bg.jpg"} head={"Next Blog"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
@@ -31,7 +9,6 @@ const home = ()=>{
           <div className="container px-4 px-lg-5">
             <div className="row gx-4 gx-lg-5 justify-content-center">
               <div className="col-md-10 col-lg-8 col-xl-7">
-                <p className={"text-center"}>{currentTime}</p>
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe nostrum ullam eveniet pariatur
                   voluptates odit, fuga atque ea nobis sit soluta odio, adipisci quas excepturi maxime quae totam

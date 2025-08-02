@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import {auth} from "@/auth";
 
-const Header = (props) => {
+const Header = async (props) => {
+    const session = await auth()
+    const userNm = (session)?session.user.name:"로그인"
     return(
         <>
             <nav className="navbar navbar-expand-lg navbar-light" id="mainNav">
@@ -25,7 +28,7 @@ const Header = (props) => {
                                 <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article/form">Form</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/signIn">로그인</Link>
+                                <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/signIn">{userNm}</Link>
                             </li>
                         </ul>
                     </div>
