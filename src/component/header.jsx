@@ -1,12 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import BtnLogin from './btnLogin'
 
-
-const Header = async (props) => {
-    const session = await getServerSession(authOptions)
-    const userNm = (session)?session.user.name:"로그인"
+const Header = (props) => {
     return(
         <>
             <nav className="navbar navbar-expand-lg navbar-light" id="mainNav">
@@ -30,7 +26,7 @@ const Header = async (props) => {
                                 <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article/form">Form</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/signIn">{userNm}</Link>
+                                <BtnLogin />
                             </li>
                         </ul>
                     </div>
