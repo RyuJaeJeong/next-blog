@@ -1,5 +1,4 @@
 import Header from '@/component/header'
-import { auth } from "@/auth"
 
 const home = async ()=>{
   return(

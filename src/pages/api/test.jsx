@@ -2,13 +2,12 @@ import { neon } from '@neondatabase/serverless';
 import path from 'path';
 import mybatisMapper from 'mybatis-mapper'
 
-
-const mapperDir = path.join(process.cwd(), 'src', 'assets', 'mapper', 'test.xml')
-mybatisMapper.createMapper([mapperDir])
+const client = neon(`${process.env.DATABASE_URL}`);
+const dir = path.join(process.cwd(), 'src', 'assets', 'mapper', 'test.xml')
+mybatisMapper.createMapper([dir])
 
 const handler = async (req, res) => {
     if(req.method == 'GET'){
-        const client = neon(`${process.env.DATABASE_URL}`);
         const param = {
             timezone: 'Asia/Seoul',
             template: 'YYYY-MM-DD HH24:MI:SS'

@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import {auth} from "@/auth";
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+
 
 const Header = async (props) => {
-    const session = await auth()
+    const session = await getServerSession(authOptions)
     const userNm = (session)?session.user.name:"로그인"
     return(
         <>
