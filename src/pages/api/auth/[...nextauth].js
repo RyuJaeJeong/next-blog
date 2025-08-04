@@ -22,13 +22,11 @@ export const authOptions = {
             authorize: async (credentials, req) => {
                 let user = null
                 try{
-                    // logic to salt and hash password
-                    // const pwHash = saltAndHashPassword(credentials.password)
                     if (!credentials.email || !credentials.password) {
                         throw new Error("Invalid credentials.")
                     }
                     var client = await pool.connect();
-                    const sql = `SELECT id, name, email, "emailVerified", image, password FROM users T1 WHERE T1.email = $1 AND T1.password = $2`;
+                    const sql = `SELECT T1.* FROM users T1 WHERE T1.email = $1 AND T1.password = crypt($2, T1.password)`;
                     const rows = await client.query(sql, [credentials.email, credentials.password]);
                     user = (rows.rows && rows.rows.length > 0)?rows.rows[0]:null
                 }catch (e) {
