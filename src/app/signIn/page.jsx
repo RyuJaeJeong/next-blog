@@ -1,51 +1,76 @@
 "use client"
-import { signIn } from "next-auth/react"
 import Header from "@/component/header";
 import styles from "@/app/signIn/page.module.css"
-import {redirect} from "next/navigation";
+import { signIn } from "next-auth/react"
+import { redirect } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function SignIn() {
-    const handleSubmit = async (e) => {
-        const formData = new FormData(e.target)
-        const email = formData.get('email')
-        const password = formData.get('password')
-
-        signIn("credentials", {email: email, password: password, redirect: false}).then((res)=>{
-            if(res.status == 200){
-                redirect("/")
-            }else if(res.status == 401){
-                toast.error("Invalid email or Password!")
-            }
-        });
-
-    }
+    const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
         <>
             <Header image={"/login-bg.jpg"} head={"Login Page"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
-            <ToastContainer position={"bottom-center"}pauseOnHover={false} />
+            <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} />
             <form
                 className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
-                onSubmit={(e)=>{
-                    e.preventDefault();
-                    handleSubmit(e);
-                }}
+                onSubmit={handleSubmit(async data => {
+                        data.redirect = false;
+                        signIn("credentials", data).then((res)=>{
+                            if(res.status == 200){
+                                redirect("/")
+                            }else if(res.status == 401){
+                                toast.error("Invalid email or Password!")
+                            }
+                        });
+                    }
+                )}
             >
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email</label>
-                    <input type="email" className="form-control" name={"email"} id={"email"} aria-describedby="emailHelp"/>
+                    <input type="email"
+                           name={"email"}
+                           id={"email"}
+                           className="form-control"
+                           aria-invalid={
+                               isSubmitted ? (errors.email ? "true" : "false") : undefined
+                           }
+                           aria-describedby="emailHelp"
+                           {...register("email", {
+                               required: "이메일은 필수 입력입니다.",
+                               pattern: {
+                                   value: /\S+@\S+\.\S+/,
+                                   message: "이메일 형식에 맞지 않습니다.",
+                               },
+                           })} />
+                    {errors.email && <div id="emailHelp" role={"alert"} className="form-text">{errors.email.message}</div>}
+
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" name={"password"} id={"password"}/>
+                    <input type="password"
+                           name={"password"}
+                           id={"password"}
+                           className="form-control"
+                           aria-invalid={
+                               isSubmitted ? (errors.password ? "true" : "false") : undefined
+                           }
+                           aria-describedby="passHelp"
+                           {...register("password", {
+                               required: "비밀번호는 필수 입력입니다.",
+                               minLength: {
+                                   value: 8,
+                                   message: "8자리 이상 비밀번호를 사용하세요.",
+                               },
+                           })} />
+                    {errors.password && <div id="passHelp" role={"alert"} className="form-text">{errors.password.message}</div>}
                 </div>
                 <div className="mb-3 form-check">
                     <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
                     <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
                 </div>
-                <button type={"submit"} className="btn btn-dark w-100 rounded">Submit</button>
+                <button type={"submit"} className="btn btn-dark w-100 rounded" disabled={isSubmitting}>Submit</button>
             </form>
         </>
-
     )
 }
