@@ -3,7 +3,7 @@
     margin-bottom: 4rem;
 }
 
-@media (max-height: 960px) {
+@media (max-width: 768px) {
     .loginBox {
         width: 90% !important;
         margin-bottom: 3rem;

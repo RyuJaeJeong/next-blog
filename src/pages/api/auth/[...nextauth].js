@@ -58,8 +58,8 @@ export const authOptions = {
         },
     },
     pages: {
-        signIn: '/signIn',
-        error: '/signIn', // 에러 시 로그인 페이지로 리다이렉트
+        signIn: '/member/login',
+        error: '/member/login', // 에러 시 로그인 페이지로 리다이렉트
     },
     adapter: NeonAdapter(pool)
 }

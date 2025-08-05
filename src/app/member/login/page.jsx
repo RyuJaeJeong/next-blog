@@ -1,17 +1,17 @@
 "use client"
 import Header from "@/component/header";
-import styles from "@/app/signIn/page.module.css"
+import styles from "@/app/member/login/page.module.css"
 import { signIn } from "next-auth/react"
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 
-export default function SignIn() {
+const Login = ()=>{
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
         <>
             <Header image={"/login-bg.jpg"} head={"Login Page"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
-            <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} />
+            <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
             <form
                 className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
                 onSubmit={handleSubmit(async data => {
@@ -74,3 +74,5 @@ export default function SignIn() {
         </>
     )
 }
+
+export default Login
