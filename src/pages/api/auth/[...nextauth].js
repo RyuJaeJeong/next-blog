@@ -1,9 +1,8 @@
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
 import Credentials from "next-auth/providers/credentials";
-import { Pool } from "@neondatabase/serverless";
+import {pool} from "@/db"
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL })
 export const authOptions = {
     providers:[
         Credentials({
@@ -25,15 +24,15 @@ export const authOptions = {
                     if (!credentials.email || !credentials.password) {
                         throw new Error("Invalid credentials.")
                     }
-                    var client = await pool.connect();
+                    var conn = await pool.connect();
                     const sql = `SELECT T1.* FROM users T1 WHERE T1.email = $1 AND T1.password = crypt($2, T1.password)`;
-                    const rows = await client.query(sql, [credentials.email, credentials.password]);
+                    const rows = await conn.query(sql, [credentials.email, credentials.password]);
                     user = (rows.rows && rows.rows.length > 0)?rows.rows[0]:null
                 }catch (e) {
                     console.log("error occurs!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     console.error(e)
                 }finally {
-                    if(client) client.release()
+                    if(conn) conn.release()
                 }
                 return user
             },
