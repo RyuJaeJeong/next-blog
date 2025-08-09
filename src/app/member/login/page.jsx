@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react"
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
+import Link from "next/link";
 
 const Login = ()=>{
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
@@ -43,8 +44,7 @@ const Login = ()=>{
                                    message: "이메일 형식에 맞지 않습니다.",
                                },
                            })} />
-                    {errors.email && <div id="emailHelp" role={"alert"} className="form-text">{errors.email.message}</div>}
-
+                    {errors.email && <div id="emailHelp" role={"alert"} className="form-text fs-6 text-danger">{errors.email.message}</div>}
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
@@ -63,13 +63,16 @@ const Login = ()=>{
                                    message: "8자리 이상 비밀번호를 사용하세요.",
                                },
                            })} />
-                    {errors.password && <div id="passHelp" role={"alert"} className="form-text">{errors.password.message}</div>}
+                    {errors.password && <div id="passHelp" role={"alert"} className="form-text fs-6 text-danger">{errors.password.message}</div>}
                 </div>
                 <div className="mb-3 form-check">
                     <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
                     <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
                 </div>
-                <button type={"submit"} className="btn btn-dark w-100 rounded" disabled={isSubmitting}>Submit</button>
+                <button type={"submit"} className="btn btn-dark w-100 rounded mb-3" disabled={isSubmitting}>Submit</button>
+                <div className="form-text fs-6 text-center">
+                    Don't have an account yet? <Link style={{color: 'var(--bs-blue)'}} href={"/member/register"}>Register now</Link>
+                </div>
             </form>
         </>
     )
