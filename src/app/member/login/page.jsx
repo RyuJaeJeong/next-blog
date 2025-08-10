@@ -5,9 +5,23 @@ import { signIn } from "next-auth/react"
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
+import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
+import {useEffect} from "react";
+import { useRouter } from "next/navigation";
 
 const Login = ()=>{
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    useEffect(()=>{
+        const message = searchParams?.get("message");
+        if(message){
+            toast.success(message)
+            setTimeout(() => {
+                router.replace('/member/login', { scroll: false });
+            }, 200)
+        }
+    }, [])
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
         <>

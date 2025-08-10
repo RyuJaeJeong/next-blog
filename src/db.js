@@ -11,7 +11,6 @@ if(!global.pool){
 pool = global.pool
 
 if(!global.mybatisMapper){
-    console.log("mybatis mapper init!")
     const mapperArr = []
     const dir = path.join(process.cwd(), 'src', 'assets', 'mapper')
     const items = fs.readdirSync(dir)
@@ -26,9 +25,7 @@ if(!global.mybatisMapper){
             }
         }
     }
-    console.log(mapperArr)
     mybatisMapper.createMapper(mapperArr)
-    console.log(mybatisMapper)
 }
 
 export {pool, mybatisMapper}

@@ -4,7 +4,7 @@ const handler = async(req, res) =>{
     if(req.method == 'POST'){
         try{
             var conn = await pool.connect();
-            const param = req.body
+            const param = JSON.parse(req.body)
             const sql = mybatisMapper.getStatement("memberMapper", "insertMember", param, {language: 'sql', indent: '  '})
             const rows = await conn.query(sql);
             return res.status(200).json({
