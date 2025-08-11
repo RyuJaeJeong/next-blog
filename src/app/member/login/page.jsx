@@ -1,5 +1,4 @@
 "use client"
-export const dynamic = 'force-dynamic'
 import Header from "@/component/header";
 import styles from "@/app/member/login/page.module.css"
 import { signIn } from "next-auth/react"
