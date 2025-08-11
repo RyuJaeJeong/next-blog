@@ -1,4 +1,5 @@
 "use client"
+export const dynamic = 'force-dynamic'
 import Header from "@/component/header";
 import styles from "@/app/member/login/page.module.css"
 import { signIn } from "next-auth/react"
@@ -7,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 const Login = ()=>{
