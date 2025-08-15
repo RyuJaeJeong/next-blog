@@ -14,19 +14,20 @@ const Form = () => {
                         method: 'post',
                         body: JSON.stringify(data)
                     })
-                    .then(res=>{
+                    .then(async res=>{
+                        const data = await res.json()
                         if(!res.ok){
-                            throw new Error(`HTTP ${res.status} : ${res.statusText}`)
+                            throw new Error(`${data.msg}`)
                         }else{
                             console.log(res.status)
-                            return res.json()
+                            return data
                         }
                     })
                     .then(res=>{
                         router.push(`/member/login?message=${res.msg}`)
                     })
                     .catch(error=>{
-                        console.error(error)
+                        console.log(error)
                         toast.error(error.message)
                     })
               })}
