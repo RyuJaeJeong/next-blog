@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
 import Credentials from "next-auth/providers/credentials";
-import {pool} from "@/db"
+import { pool } from "@/utils/db"
 
 export const authOptions = {
     providers:[
