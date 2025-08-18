@@ -9,12 +9,12 @@ import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import * as React from 'react'
 
-const Login = ()=>{
-    const searchParams = useSearchParams();
+const Login = ({searchParams})=>{
     const router = useRouter();
+    const { message } = React.use(searchParams)
     useEffect(()=>{
-        const message = searchParams?.get("message");
         if(message){
             toast.success(message)
             setTimeout(() => {
