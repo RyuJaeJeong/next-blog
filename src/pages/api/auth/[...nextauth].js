@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
 import Credentials from "next-auth/providers/credentials";
-import { pool } from "@/utils/db"
+import { pool, mybatisMapper } from "@/utils/db"
+import argon2  from "argon2";
 
 export const authOptions = {
     providers:[
@@ -25,12 +26,22 @@ export const authOptions = {
                         throw new Error("Invalid credentials.")
                     }
                     var conn = await pool.connect();
-                    const sql = `SELECT T1.* FROM users T1 WHERE T1.email = $1 AND T1.password = crypt($2, T1.password)`;
-                    const rows = await conn.query(sql, [credentials.email, credentials.password]);
-                    user = (rows.rows && rows.rows.length > 0)?rows.rows[0]:null
+                    // 로그인
+                    let sql = mybatisMapper.getStatement("authMapper", "selectLOGIN", { email: credentials.email })
+                    console.log(sql)
+                    const result = await conn.query(sql);
+                    const longHash = (result.rows && result.rows.length > 0)?result.rows[0].password:process.env.DUMMY_HASH;
+                    const verified = await argon2.verify(longHash, credentials.password, {secret : Buffer.from(process.env.PASSWORD_PEPPER)})
+
+                    // 로그인 성공 여부 로깅
+                    sql = mybatisMapper.getStatement("authMapper", "insertLoginLog", { reqIp: req.headers['x-forwarded-for'], reqEmail: credentials.email, reqSuccYn: verified })
+                    console.log(sql)
+                    await conn.query(sql)
+                    user = (verified)?result.rows[0]:null;
                 }catch (e) {
                     console.log("error occurs!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     console.error(e)
+                    console.error(e.message)
                 }finally {
                     if(conn) conn.release()
                 }
