@@ -3,7 +3,8 @@
 <mapper namespace="authMapper">
     <insert id="insertLoginLog">
         INSERT INTO t_logma01(req_seq, req_ip, req_email, req_succ_yn)
-        SELECT (SELECT COALESCE(MAX(T0.req_seq), 0) + 1 FROM t_logma01 T0 WHERE T0.req_dt=(NOW() AT TIME ZONE 'Asia/Seoul')::DATE)
+        SELECT /* insertLoginLog */
+               (SELECT COALESCE(MAX(T0.req_seq), 0) + 1 FROM t_logma01 T0 WHERE T0.req_dt=(NOW() AT TIME ZONE 'Asia/Seoul')::DATE)
              , #{reqIp}
              , #{reqEmail}
              , #{reqSuccYn}
