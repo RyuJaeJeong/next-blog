@@ -22,26 +22,35 @@ export const authOptions = {
             authorize: async (credentials, req) => {
                 let user = null
                 try{
+                    var conn = await pool.connect();
                     if (!credentials.email || !credentials.password) {
                         throw new Error("Invalid credentials.")
                     }
-                    var conn = await pool.connect();
+
                     // 로그인
                     let sql = mybatisMapper.getStatement("authMapper", "selectLOGIN", { email: credentials.email })
-                    console.log(sql)
-                    const result = await conn.query(sql);
-                    const longHash = (result.rows && result.rows.length > 0)?result.rows[0].password:process.env.DUMMY_HASH;
+                    const { rows } = await conn.query(sql);
+                    const longHash = (rows && rows.length > 0)?rows[0].password:process.env.DUMMY_HASH;
                     const verified = await argon2.verify(longHash, credentials.password, {secret : Buffer.from(process.env.PASSWORD_PEPPER)})
 
                     // 로그인 성공 여부 로깅
-                    sql = mybatisMapper.getStatement("authMapper", "insertLoginLog", { reqIp: req.headers['x-forwarded-for'], reqEmail: credentials.email, reqSuccYn: verified })
-                    console.log(sql)
+                    const param = {
+                        reqIp: req.headers['x-forwarded-for'],
+                        reqEmail: credentials.email,
+                        reqSuccYn: verified
+                    }
+                    await conn.query('BEGIN')
+                    sql = mybatisMapper.getStatement("authMapper", "insertLoginLog", param)
                     await conn.query(sql)
-                    user = (verified)?result.rows[0]:null;
+                    sql = mybatisMapper.getStatement("authMapper", "upsertRetrictionLog", param)
+                    await conn.query(sql)
+                    await conn.query('COMMIT')
+                    user = (verified)?rows[0]:null;
                 }catch (e) {
                     console.log("error occurs!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                     console.error(e)
                     console.error(e.message)
+                    await conn.query('ROLLBACK')
                 }finally {
                     if(conn) conn.release()
                 }

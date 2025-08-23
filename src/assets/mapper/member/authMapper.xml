@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="authMapper">
+    <insert id="insertLoginLog">
+        INSERT INTO t_logma01(req_seq, req_ip, req_email, req_succ_yn)
+        SELECT /* insertLoginLog */
+               (SELECT COALESCE(MAX(T0.req_seq), 0) + 1 FROM t_logma01 T0 WHERE T0.req_dt=(NOW() AT TIME ZONE 'Asia/Seoul')::DATE)
+             , #{reqIp}
+             , #{reqEmail}
+             , #{reqSuccYn}
+    </insert>
+
+    <insert id="upsertRetrictionLog">
+        <choose>
+            <when test="reqSuccYn">
+                UPDATE t_memma02
+                   SET fail_cnt = 0
+                     , upd_dttm = now()
+                 WHERE email=#{reqEmail}
+            </when>
+            <otherwise>
+                INSERT INTO t_memma02 (email, fail_cnt, acc_restriction_cnt) VALUES (#{reqEmail}, 1, 0)
+                ON CONFLICT (email)
+                DO UPDATE /* upsertRetrictionLog */
+                      SET fail_cnt = CASE
+                                         WHEN t_memma02.fail_cnt = 5 THEN 1
+                                         ELSE t_memma02.fail_cnt + 1
+                                      END
+                        , acc_restriction_cnt = CASE
+                                                    WHEN t_memma02.fail_cnt = 4 THEN t_memma02.acc_restriction_cnt+1
+                                                    ELSE t_memma02.acc_restriction_cnt
+                                                 END
+                        , upd_dttm = now()
+            </otherwise>
+        </choose>
+
+    </insert>
+
+    <select id="selectLOGIN">
+        SELECT /* selectLOGIN */
+               T1.id
+             , T1.name
+             , T1.email
+             , T1."emailVerified"
+             , T1.image
+             , T1.password
+             , T1.regi_dttm AS regiDttm
+          FROM users T1
+         WHERE T1.email = #{email}
+    </select>
+</mapper>
