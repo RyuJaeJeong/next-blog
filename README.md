@@ -19,8 +19,11 @@ npm run dev
 
 ## 참고
 
-#### 배포 
+#### 배포
 https://blog.financeryu.co.kr
 
-#### 참고 : 
+#### 참고
 https://finance2ryu.tistory.com
+
+#### 요구사항정의서
+https://docs.google.com/spreadsheets/d/1cUqgTSAiRFTl4M7zpoRV8ZDqLekRz3SAiNfqsUuPd3M/edit?usp=sharing
