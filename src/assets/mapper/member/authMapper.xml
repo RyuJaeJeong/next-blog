@@ -10,7 +10,7 @@
              , #{reqSuccYn}
     </insert>
 
-    <insert id="upsertRetrictionLog">
+    <update id="upsertRetrictionLog">
         <choose>
             <when test="reqSuccYn">
                 UPDATE t_memma02
@@ -30,11 +30,15 @@
                                                     WHEN t_memma02.fail_cnt = 4 THEN t_memma02.acc_restriction_cnt+1
                                                     ELSE t_memma02.acc_restriction_cnt
                                                  END
-                        , upd_dttm = now()
+                        , restric_dttm = CASE
+                                             WHEN t_memma02.fail_cnt = 4 THEN (now() + interval '5 minute' * (t_memma02.acc_restriction_cnt + 1)) AT TIME ZONE 'Asia/Seoul'
+                                             ELSE t_memma02.restric_dttm
+                                          END
+                        , upd_dttm = now() AT TIME ZONE 'Asia/Seoul'
             </otherwise>
         </choose>
 
-    </insert>
+    </update>
 
     <select id="selectLOGIN">
         SELECT /* selectLOGIN */
@@ -44,8 +48,14 @@
              , T1."emailVerified"
              , T1.image
              , T1.password
-             , T1.regi_dttm AS regiDttm
-          FROM users T1
-         WHERE T1.email = #{email}
+             , T1.regi_dttm                                           AS "regiDttm"
+             , to_char(T2.restric_dttm, 'YYYY-MM-DD HH24:MI:SS')      AS "restricDttm"
+             , CASE
+                   WHEN (COALESCE(T2.fail_cnt, 0) = 5 AND T2.restric_dttm > now() AT TIME ZONE 'Asia/Seoul') THEN TRUE
+                   ELSE FALSE
+                END                                                   AS "restricYn"
+          FROM users T1 FULL OUTER JOIN t_memma02 T2
+         USING (email)
+         WHERE email = #{email}
     </select>
 </mapper>

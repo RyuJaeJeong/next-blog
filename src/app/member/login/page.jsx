@@ -31,13 +31,17 @@ const Login = ({searchParams})=>{
                 className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
                 onSubmit={handleSubmit(async data => {
                         data.redirect = false;
-                        signIn("credentials", data).then((res)=>{
-                            if(res.status == 200){
-                                redirect("/")
-                            }else if(res.status == 401){
-                                toast.error("Invalid email or Password!")
-                            }
-                        });
+                        const res = await signIn("credentials", data);
+                        if(res.status == 200){
+                            redirect("/")
+                        }else if(res.status == 401){
+                            const msg = (res.error == 'CredentialsSignin')?"Invalid email or Password!":res.error;
+                            toast.error(msg, {
+                                style: {
+                                    textAlign: "center",
+                                },
+                            });
+                        }
                     }
                 )}
             >

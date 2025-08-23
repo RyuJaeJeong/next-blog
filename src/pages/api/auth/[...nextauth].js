@@ -30,6 +30,9 @@ export const authOptions = {
                     // 로그인
                     let sql = mybatisMapper.getStatement("authMapper", "selectLOGIN", { email: credentials.email })
                     const { rows } = await conn.query(sql);
+                    console.log(rows)
+                    if(rows[0].restricYn) throw new Error(`로그인이 제한되어 있습니다.\n${rows[0].restricDttm}`)
+
                     const longHash = (rows && rows.length > 0)?rows[0].password:process.env.DUMMY_HASH;
                     const verified = await argon2.verify(longHash, credentials.password, {secret : Buffer.from(process.env.PASSWORD_PEPPER)})
 
@@ -51,6 +54,7 @@ export const authOptions = {
                     console.error(e)
                     console.error(e.message)
                     await conn.query('ROLLBACK')
+                    throw e
                 }finally {
                     if(conn) conn.release()
                 }
