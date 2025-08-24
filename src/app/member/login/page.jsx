@@ -5,7 +5,6 @@ import { signIn } from "next-auth/react"
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
-import { useSearchParams } from 'next/navigation';
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -36,11 +35,7 @@ const Login = ({searchParams})=>{
                             redirect("/")
                         }else if(res.status == 401){
                             const msg = (res.error == 'CredentialsSignin')?"Invalid email or Password!":res.error;
-                            toast.error(msg, {
-                                style: {
-                                    textAlign: "center",
-                                },
-                            });
+                            toast.error(msg);
                         }
                     }
                 )}
@@ -50,7 +45,7 @@ const Login = ({searchParams})=>{
                     <input type="email"
                            name={"email"}
                            id={"email"}
-                           className="form-control"
+                           className={`form-control ${errors.email && "is-invalid"}`}
                            aria-invalid={
                                isSubmitted ? (errors.email ? "true" : "false") : undefined
                            }
@@ -61,15 +56,15 @@ const Login = ({searchParams})=>{
                                    value: /\S+@\S+\.\S+/,
                                    message: "이메일 형식에 맞지 않습니다.",
                                },
-                           })} />
-                    {errors.email && <div id="emailHelp" role={"alert"} className="form-text fs-6 text-danger">{errors.email.message}</div>}
+                           })}/>
+                    {errors.email && <div id="emailHelp" role={"alert"} className={`form-text  text-danger ${styles.errMessage}`}>{errors.email.message}</div>}
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password</label>
                     <input type="password"
                            name={"password"}
                            id={"password"}
-                           className="form-control"
+                           className={`form-control ${!errors.email && errors.password && "is-invalid"}`}
                            aria-invalid={
                                isSubmitted ? (errors.password ? "true" : "false") : undefined
                            }
@@ -80,13 +75,17 @@ const Login = ({searchParams})=>{
                                    value: 8,
                                    message: "8자리 이상 비밀번호를 사용하세요.",
                                },
+                               maxLength: {
+                                   value: 64,
+                                   message: "64자리 이하 비밀번호를 사용하세요."
+                               }
                            })} />
-                    {errors.password && <div id="passHelp" role={"alert"} className="form-text fs-6 text-danger">{errors.password.message}</div>}
+                    {!errors.email && errors.password && <div id="passHelp" role={"alert"} className={`form-text  text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
                 </div>
-                <div className="mb-3 form-check">
-                    <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-                    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-                </div>
+                {/*<div className="mb-3 form-check">*/}
+                {/*    <input type="checkbox" className="form-check-input" id="exampleCheck1"/>*/}
+                {/*    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>*/}
+                {/*</div>*/}
                 <button type={"submit"} className="btn btn-dark w-100 rounded mb-3" disabled={isSubmitting}>Submit</button>
                 <div className="form-text fs-6 text-center">
                     Don't have an account yet? <Link style={{color: 'var(--bs-blue)'}} href={"/member/register"}>Register now</Link>
