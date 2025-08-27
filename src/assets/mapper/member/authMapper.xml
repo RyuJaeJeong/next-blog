@@ -34,27 +34,27 @@
         <choose>
             <when test="reqSuccYn">
                 UPDATE t_memma02
-                SET fail_cnt = 0
-                , upd_dttm = now()
-                WHERE email=#{reqEmail}
+                   SET fail_cnt = 0
+                     , upd_dttm = now()
+                 WHERE email=#{reqEmail}
             </when>
             <otherwise>
                 INSERT INTO t_memma02 (email, fail_cnt, acc_restriction_cnt) VALUES (#{reqEmail}, 1, 0)
                 ON CONFLICT (email)
                 DO UPDATE /* upsertRetrictionLog */
-                SET fail_cnt = CASE
-                WHEN t_memma02.fail_cnt = 5 THEN 1
-                ELSE t_memma02.fail_cnt + 1
-                END
-                , acc_restriction_cnt = CASE
-                WHEN t_memma02.fail_cnt = 4 THEN t_memma02.acc_restriction_cnt+1
-                ELSE t_memma02.acc_restriction_cnt
-                END
-                , restric_dttm = CASE
-                WHEN t_memma02.fail_cnt = 4 THEN (now() + interval '5 minute' * (t_memma02.acc_restriction_cnt + 1)) AT TIME ZONE 'Asia/Seoul'
-                ELSE t_memma02.restric_dttm
-                END
-                , upd_dttm = now() AT TIME ZONE 'Asia/Seoul'
+                      SET fail_cnt = CASE
+                                        WHEN t_memma02.fail_cnt = 5 THEN 1
+                                        ELSE t_memma02.fail_cnt + 1
+                                      END
+                        , acc_restriction_cnt = CASE
+                                                   WHEN t_memma02.fail_cnt = 4 THEN t_memma02.acc_restriction_cnt+1
+                                                   ELSE t_memma02.acc_restriction_cnt
+                                                 END
+                        , restric_dttm = CASE
+                                            WHEN t_memma02.fail_cnt = 4 THEN (now() + interval '5 minute' * (t_memma02.acc_restriction_cnt + 1)) AT TIME ZONE 'Asia/Seoul'
+                                            ELSE t_memma02.restric_dttm
+                                          END
+                        , upd_dttm = now() AT TIME ZONE 'Asia/Seoul'
             </otherwise>
         </choose>
     </update>

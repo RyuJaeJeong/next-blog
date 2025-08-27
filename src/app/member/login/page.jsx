@@ -27,7 +27,7 @@ const Login = ({searchParams})=>{
     return (
         <div className={"position-relative h-100"}>
             <Loading className={`${isLoading?"":"d-none"}`}/>
-            <Header image={"/login-bg.jpg"} head={"Login Page"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
+            <Header image={"/login-bg.webp"} head={"Login Page"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
             <form
                 className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}

@@ -4,7 +4,7 @@ import Header from '@/component/header'
 const home = ()=>{
   return(
       <>
-        <Header image={"/home-bg.jpg"} head={"List Page"} subhead={"Article List Page"} meta={""} isPost={false}/>
+        <Header image={"/home-bg.webp"} head={"List Page"} subhead={"Article List Page"} meta={""} isPost={false}/>
         <div className="container px-4 px-lg-5">
           <div className="row gx-4 gx-lg-5 justify-content-center">
             <div className="col-md-10 col-lg-8 col-xl-7">

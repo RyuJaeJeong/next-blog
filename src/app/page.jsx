@@ -3,7 +3,7 @@ import Header from '@/component/header'
 const home = async ()=>{
   return(
       <>
-        <Header image={"/about-bg.jpg"} head={"Next Blog"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
+        <Header image={"/about-bg.webp"} head={"Next Blog"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
         <div className="mb-4">
           <div className="container px-4 px-lg-5">
             <div className="row gx-4 gx-lg-5 justify-content-center">

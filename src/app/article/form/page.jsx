@@ -3,7 +3,7 @@ import Header from '@/component/header'
 const Form = ()=>{
     return(
         <>
-            <Header image={"/contact-bg.jpg"}
+            <Header image={"/contact-bg.webp"}
                     head={"Form Page"}
                     subhead={"Have questions? I have answers"}
                     meta={""}

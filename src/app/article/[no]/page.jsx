@@ -4,7 +4,7 @@ import Image from 'next/image'
 const Article = () => {
     return(
         <>
-            <Header image={"/post-bg.jpg"}
+            <Header image={"/post-bg.webp"}
                     head={"Man must explore, and this is exploration at its greatest"}
                     subhead={"Problems look mighty small from 150 miles up"}
                     meta={"Posted by Start Bootstrap\non August 24, 2023"}
@@ -49,7 +49,7 @@ const Article = () => {
                                 living object looked so fragile, so delicate, that if you touched it with a finger it
                                 would crumble and fall apart. Seeing this has to change a man.</p>
                             <a href="#!">
-                                <Image className="img-fluid" src="/post-sample-image.jpg" width={778} height={554} alt="..."/>
+                                <Image className="img-fluid" src="/post-sample-image.webp" width={778} height={554} alt="..."/>
                             </a>
                             <span className="caption text-muted">To go places and do things that have never been done before – that’s what living is all about.</span>
                             <p>Space, the final frontier. These are the voyages of the Starship Enterprise. Its
