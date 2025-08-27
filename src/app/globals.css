@@ -10808,7 +10808,14 @@ html, body, #__next {
 
 .loadingBox{
   background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
   height: 100%;
   align-items: center;
   z-index: 100;
+}
+
+@media (max-width: 1400px) {
+  .loadingBox {
+    height: 100VH !important;
+  }
 }
