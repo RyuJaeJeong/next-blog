@@ -10,7 +10,7 @@ Vercel
 
 ## Getting Started
 
-별도의 env 파일이 필요 합니다. 
+별도의 env 파일이 필요 합니다.[1] 
 
 ```bash
 npm install
@@ -23,7 +23,7 @@ npm run dev
 https://blog.financeryu.co.kr
 
 #### 참고
-https://finance2ryu.tistory.com
+[1]https://finance2ryu.tistory.com
 
 #### 요구사항정의서
 https://docs.google.com/spreadsheets/d/1cUqgTSAiRFTl4M7zpoRV8ZDqLekRz3SAiNfqsUuPd3M/edit?usp=sharing
