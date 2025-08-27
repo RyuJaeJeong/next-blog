@@ -10801,3 +10801,14 @@ header.masthead .post-heading .meta a {
   font-size: 1.1rem !important;
   font-family: 'Geist' !important;
 }
+
+html, body, #__next {
+  height: 100%;
+}
+
+.loadingBox{
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  align-items: center;
+  z-index: 100;
+}

@@ -6,13 +6,15 @@ import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import Link from "next/link";
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import * as React from 'react'
+import Loading from "@/component/loading"
 
 const Login = ({searchParams})=>{
     const router = useRouter();
     const { message } = React.use(searchParams)
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(()=>{
         if(message){
             toast.success(message)
@@ -23,17 +25,20 @@ const Login = ({searchParams})=>{
     }, [])
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
-        <>
+        <div className={"position-relative h-100"}>
+            <Loading className={`${isLoading?"":"d-none"}`}/>
             <Header image={"/login-bg.jpg"} head={"Login Page"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
             <form
                 className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
                 onSubmit={handleSubmit(async data => {
+                        setIsLoading(true)
                         data.redirect = false;
                         const res = await signIn("credentials", data);
                         if(res.status == 200){
                             redirect("/")
                         }else if(res.status == 401){
+                            setIsLoading(false);
                             const msg = (res.error == 'CredentialsSignin')?"Invalid email or Password!":res.error;
                             toast.error(msg);
                         }
@@ -91,7 +96,7 @@ const Login = ({searchParams})=>{
                     Don't have an account yet? <Link style={{color: 'var(--bs-blue)'}} href={"/member/register"}>Register now</Link>
                 </div>
             </form>
-        </>
+        </div>
     )
 }
 
