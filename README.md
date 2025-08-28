@@ -10,7 +10,7 @@ Vercel
 
 ## Getting Started
 
-별도의 env 파일이 필요 합니다.[^1] 
+별도의 env 파일이 필요 합니다.
 
 ```bash
 npm install
