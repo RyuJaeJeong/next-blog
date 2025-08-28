@@ -1,17 +1,22 @@
 "use client"
+import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { toast, ToastContainer } from "react-toastify";
+import { useState } from "react";
+import Loading from "@/component/loading"
 import styles from "@/app/member/register/page.module.css"
 
 
+
 const Form = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter()
     const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
         <form id="registerForm"
               className={"text-end"}
               onSubmit={handleSubmit(async data =>{
+                    setIsLoading(true)
                     fetch(`/api/member`, {
                         method: 'post',
                         body: JSON.stringify(data)
@@ -25,12 +30,15 @@ const Form = () => {
                             return data
                         }
                     }).then(res=>{
+                        setIsLoading(false);
                         router.push(`/member/login?message=${res.msg}`)
                     }).catch(error=>{
+                        setIsLoading(false);
                         toast.error(error.message)
                     })
               })}
         >
+            <Loading className={`${isLoading?"":"d-none"}`} />
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
             <div className="form-floating">
                 <input

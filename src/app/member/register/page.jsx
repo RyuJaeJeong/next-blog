@@ -3,7 +3,7 @@ import Form from './form'
 
 const Register = ()=>{
     return(
-        <>
+        <div className={"position-relative h-100"}>
             <Header image={"/login-bg.webp"} head={"회원 가입"} subhead={""} meta={"Next.log()에 오신 것을 환영 합니다"} isPost={false}/>
             <main className="mb-4">
                 <div className="container px-4 px-lg-5">
@@ -16,7 +16,7 @@ const Register = ()=>{
                     </div>
                 </div>
             </main>
-        </>
+        </div>
     )
 }
 export default Register
