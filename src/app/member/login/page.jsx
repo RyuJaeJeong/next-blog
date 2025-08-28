@@ -25,7 +25,7 @@ const Login = ({searchParams})=>{
     }, [])
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
-        <div className={`position-relative ${styles.loginContainer}`}>
+        <div className={`position-relative h-100`}>
             <Loading className={`${isLoading?"":"d-none"}`}/>
             <Header image={"/login-bg.webp"} head={"Login Page"} subhead={"A Blog by Next.js"} meta={""} isPost={false}/>
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
