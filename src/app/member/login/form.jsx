@@ -14,6 +14,18 @@ const Form = (props)=>{
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     const { message } = React.use(props.searchParams)
     const [isLoading, setIsLoading] = useState(false);
+    const onSubmit = async (data)=>{
+        setIsLoading(true)
+        data.redirect = false;
+        const res = await signIn("credentials", data);
+        if (res.status == 200) {
+            redirect("/")
+        } else if (res.status == 401) {
+            setIsLoading(false);
+            const msg = (res.error == 'CredentialsSignin') ? "Invalid email or Password!" : res.error;
+            toast.error(msg);
+        }
+    }
     useEffect(()=>{
         if(message){
             toast.success(message)
@@ -23,22 +35,7 @@ const Form = (props)=>{
         }
     }, [])
     return (
-        <form
-            className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
-            onSubmit={handleSubmit(async data => {
-                    setIsLoading(true)
-                    data.redirect = false;
-                    const res = await signIn("credentials", data);
-                    if (res.status == 200) {
-                        redirect("/")
-                    } else if (res.status == 401) {
-                        setIsLoading(false);
-                        const msg = (res.error == 'CredentialsSignin') ? "Invalid email or Password!" : res.error;
-                        toast.error(msg);
-                    }
-                }
-            )}
-        >
+        <form className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`} onSubmit={handleSubmit(onSubmit)}>
             <Loading className={`${isLoading?"":"d-none"}`}/>
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
             <div className="mb-3">

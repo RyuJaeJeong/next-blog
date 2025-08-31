@@ -13,31 +13,7 @@ const Form = () => {
     const router = useRouter()
     const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }} = useForm();
     return (
-        <form id="registerForm"
-              className={"text-end"}
-              onSubmit={handleSubmit(async data =>{
-                    setIsLoading(true)
-                    fetch(`/api/member`, {
-                        method: 'post',
-                        body: JSON.stringify(data)
-                    })
-                    .then(async res=>{
-                        const data = await res.json()
-                        if(!res.ok){
-                            throw new Error(`${data.msg}`)
-                        }else{
-                            console.log(res.status)
-                            return data
-                        }
-                    }).then(res=>{
-                        setIsLoading(false);
-                        router.push(`/member/login?message=${res.msg}`)
-                    }).catch(error=>{
-                        setIsLoading(false);
-                        toast.error(error.message)
-                    })
-              })}
-        >
+        <form id="registerForm" className={`text-end`} onSubmit={handleSubmit(onSubmit)}>
             <Loading className={`${isLoading?"":"d-none"}`} />
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
             <div className="form-floating">
