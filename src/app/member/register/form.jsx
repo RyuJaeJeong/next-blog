@@ -5,13 +5,48 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from "@/component/loading"
 import styles from "@/app/member/register/page.module.css"
-
+import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core'
+import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
+import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en'
 
 
 const Form = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter()
+    const router = useRouter();
     const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }} = useForm();
+    zxcvbnOptions.setOptions({
+            translations: zxcvbnEnPackage.translations,
+            graphs: zxcvbnCommonPackage.adjacencyGraphs,
+            dictionary: {
+                ...zxcvbnCommonPackage.dictionary,
+                ...zxcvbnEnPackage.dictionary,
+            },
+    });
+    const [passwordStrengthScore, setPasswordStrengthScore] = useState(4);
+    const [passwordStrengthFeedback, setPasswordStrengthFeedback] = useState("");
+    const onSubmit = async data => {
+        setIsLoading(true)
+        fetch(`/api/member`, {
+            method: 'post',
+            body: JSON.stringify(data)
+        })
+            .then(async res=>{
+                const data = await res.json()
+                if(!res.ok){
+                    throw new Error(`${data.msg}`)
+                }else{
+                    console.log(res.status)
+                    return data
+                }
+            }).then(res=>{
+            setIsLoading(false);
+            router.push(`/member/login?message=${res.msg}`)
+        }).catch(error=>{
+            setIsLoading(false);
+            toast.error(error.message)
+        })
+    }
+
     return (
         <form id="registerForm" className={`text-end`} onSubmit={handleSubmit(onSubmit)}>
             <Loading className={`${isLoading?"":"d-none"}`} />
@@ -79,10 +114,22 @@ const Form = () => {
                            maxLength: {
                                value: 64,
                                message: "64자리 이하 비밀번호를 사용하세요.",
+                           },
+                           onChange: (e)=>{
+                               const passwordStrength = zxcvbn(e.target.value);
+                               setPasswordStrengthScore(passwordStrength.score);
+                               const feedback= passwordStrength.feedback.warning || passwordStrength.feedback.suggestions[0] || "";
+                               console.log(passwordStrength.score, feedback)
+                               setPasswordStrengthFeedback(passwordStrength.feedback.warning);
                            }
                        })} />
                 <label htmlFor="password">password</label>
                 {!errors.name && !errors.email && errors.password && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
+                {!errors.name && !errors.email && !errors.password && (passwordStrengthScore < 3) &&
+                    <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1?"text-danger":(passwordStrengthScore==2?"text-warning":"")} ${styles.errMessage}`}>
+                        {passwordStrengthFeedback}
+                    </div>
+                }
             </div>
             <div className="form-floating">
                 <input type="password"

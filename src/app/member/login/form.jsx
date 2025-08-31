@@ -88,8 +88,8 @@ const Form = (props)=>{
             {/*</div>*/}
             <button type={"submit"} className="btn btn-dark w-100 rounded mb-3" disabled={isSubmitting}>Submit</button>
             <div className="form-text fs-6 text-center">
-                Don't have an account yet? <Link style={{color: 'var(--bs-blue)'}} href={"/member/register"}>Register
-                now</Link>
+                Don't have an account yet?&nbsp;
+                <Link style={{color: 'var(--bs-blue)'}} href={"/member/register"}>Register now</Link>
             </div>
         </form>
     )
