@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Loading from "@/component/loading"
 import styles from "@/app/member/register/page.module.css"
-import { zxcvbn, zxcvbnOptions } from '@zxcvbn-ts/core'
+import {zxcvbn, zxcvbnAsync, zxcvbnOptions} from '@zxcvbn-ts/core'
 import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
 import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en'
-
+import { matcherPwnedFactory } from  '@zxcvbn-ts/matcher-pwned'
 
 const Form = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -22,6 +22,8 @@ const Form = () => {
                 ...zxcvbnEnPackage.dictionary,
             },
     });
+    const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
+    zxcvbnOptions.addMatcher('pwned', matcherPwned)
     const [passwordStrengthScore, setPasswordStrengthScore] = useState(4);
     const [passwordStrengthFeedback, setPasswordStrengthFeedback] = useState("");
     const onSubmit = async data => {
@@ -116,11 +118,11 @@ const Form = () => {
                                message: "64자리 이하 비밀번호를 사용하세요.",
                            },
                            onChange: (e)=>{
-                               const passwordStrength = zxcvbn(e.target.value);
-                               setPasswordStrengthScore(passwordStrength.score);
-                               const feedback= passwordStrength.feedback.warning || passwordStrength.feedback.suggestions[0] || "";
-                               console.log(passwordStrength.score, feedback)
-                               setPasswordStrengthFeedback(passwordStrength.feedback.warning);
+                               zxcvbnAsync(e.target.value).then(result=>{
+                                   const feedback = result.feedback.warning || result.feedback.suggestions[0] || "";
+                                   setPasswordStrengthScore(result.score);
+                                   setPasswordStrengthFeedback(feedback);
+                               });
                            }
                        })} />
                 <label htmlFor="password">password</label>
