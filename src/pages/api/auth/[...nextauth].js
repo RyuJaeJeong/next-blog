@@ -1,11 +1,18 @@
+import argon2  from "argon2";
+import Credentials from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
-import Credentials from "next-auth/providers/credentials";
-import { pool, mybatisMapper } from "@/utils/db"
-import argon2  from "argon2";
+import { mybatisMapper, pool } from "@/utils/db"
+
+
 
 export const authOptions = {
     providers:[
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        }),
         Credentials({
             credentials: {
                 email: {
