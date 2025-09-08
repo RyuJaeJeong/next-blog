@@ -1,6 +1,7 @@
 import argon2  from "argon2";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import NaverProvider from "next-auth/providers/naver";
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
 import { mybatisMapper, pool } from "@/utils/db"
@@ -12,6 +13,20 @@ export const authOptions = {
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        }),
+        NaverProvider({
+            clientId: process.env.NAVER_CLIENT_ID,
+            clientSecret: process.env.NAVER_CLIENT_SECRET,
+            authorization: { params: { scope: "name email profile_image" } },
+            profile(profile) {
+                const p = profile.response;
+                return {
+                    id: p.id,
+                    name: p.name,  // name 없으면 nickname으로 폴백
+                    email: p.email,
+                    image: p.profile_image,
+                };
+            },
         }),
         Credentials({
             credentials: {

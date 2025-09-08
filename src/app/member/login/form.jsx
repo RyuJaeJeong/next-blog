@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Loading from "@/component/loading"
 import styles from "@/app/member/login/page.module.css";
+import Image from "next/image";
 
 const Form = (props)=>{
     const router = useRouter();
@@ -80,8 +81,7 @@ const Form = (props)=>{
                                message: "64자리 이하 비밀번호를 사용하세요."
                            }
                        })} />
-                {!errors.email && errors.password && <div id="passHelp" role={"alert"}
-                                                          className={`form-text  text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
+                {!errors.email && errors.password && <div id="passHelp" role={"alert"} className={`form-text  text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
             </div>
             {/*<div className="mb-3 form-check">*/}
             {/*    <input type="checkbox" className="form-check-input" id="exampleCheck1"/>*/}
@@ -90,8 +90,8 @@ const Form = (props)=>{
             <button type={"submit"} className="btn btn-dark w-100 rounded mb-3" disabled={isSubmitting}>Submit</button>
             <div className={`text-center`}>
                 <button type="button"
-                        className={"flex items-center justify-center gap-2 w-full h-10 rounded-circle border border-gray-300 bg-white hover:bg-gray-100"}
-                        style={{width: "50px", height: "50px"}}
+                        className={"flex items-center justify-center gap-2 w-full h-10 rounded-circle border bg-white hover:bg-gray-100"}
+                        style={{width: "50px", height: "50px", color: "#f3f3f3"}}
                         onClick={() => signIn("google", {callbackUrl: "/"})}>
                     <svg width="18" height="18" viewBox="0 0 18 18">
                         <path fill="#EA4335"
@@ -104,6 +104,10 @@ const Form = (props)=>{
                               d="M9 18c2.43 0 4.47-.8 5.96-2.17l-2.74-2.13 c-.76.51-1.73.86-3.22.86-2.48 0-4.6-1.56-5.18-3.72L.96 13.02C2.44 16.02 5.48 18 9 18z"/>
                     </svg>
                 </button>
+                &nbsp;
+                <Link href={"#"} onClick={()=> signIn("naver", {callbackUrl: "/"})}>
+                    <Image width={50} height={50} src="/btnW_icon_circle.png" alt={"Naver Login Button"}/>
+                </Link>
             </div>
 
             <div className="form-text fs-6 text-center">
