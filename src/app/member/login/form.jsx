@@ -53,8 +53,8 @@ const Form = (props)=>{
             <div className="mb-3">
                 <label htmlFor="email" className="form-label">Email</label>
                 <input type="email"
-                       name={"email"}
-                       id={"email"}
+                       name="email"
+                       id="email"
                        className={`form-control ${errors.email && "is-invalid"}`}
                        aria-invalid={
                            isSubmitted ? (errors.email ? "true" : "false") : undefined
@@ -73,8 +73,8 @@ const Form = (props)=>{
             <div className="mb-3">
                 <label htmlFor="password" className="form-label">Password</label>
                 <input type="password"
-                       name={"password"}
-                       id={"password"}
+                       name="password"
+                       id="password"
                        className={`form-control ${!errors.email && errors.password && "is-invalid"}`}
                        aria-invalid={
                            isSubmitted ? (errors.password ? "true" : "false") : undefined
@@ -104,14 +104,10 @@ const Form = (props)=>{
                         style={{width: "50px", height: "50px", color: "#f3f3f3"}}
                         onClick={() => signIn("google", {callbackUrl: "/"})}>
                     <svg width="18" height="18" viewBox="0 0 18 18">
-                        <path fill="#EA4335"
-                              d="M9 3.48c1.69 0 2.84.73 3.49 1.35l2.38-2.32C13.57.89 11.5 0 9 0 5.48 0 2.44 1.98.96 4.88l2.86 2.22C4.4 5.04 6.52 3.48 9 3.48z"/>
-                        <path fill="#4285F4"
-                              d="M17.64 9.2c0-.64-.06-1.25-.17-1.84H9v3.48h4.84 a4.14 4.14 0 0 1-1.8 2.71l2.74 2.13c1.6-1.48 2.86-3.67 2.86-6.48z"/>
-                        <path fill="#FBBC05"
-                              d="M3.82 10.08A5.52 5.52 0 0 1 3.52 9c0-.38.07-.75.16-1.08 L.82 5.7A9 9 0 0 0 0 9c0 1.45.35 2.81.96 4.02l2.86-2.22z"/>
-                        <path fill="#34A853"
-                              d="M9 18c2.43 0 4.47-.8 5.96-2.17l-2.74-2.13 c-.76.51-1.73.86-3.22.86-2.48 0-4.6-1.56-5.18-3.72L.96 13.02C2.44 16.02 5.48 18 9 18z"/>
+                        <path fill="#EA4335" d="M9 3.48c1.69 0 2.84.73 3.49 1.35l2.38-2.32C13.57.89 11.5 0 9 0 5.48 0 2.44 1.98.96 4.88l2.86 2.22C4.4 5.04 6.52 3.48 9 3.48z"/>
+                        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.17-1.84H9v3.48h4.84 a4.14 4.14 0 0 1-1.8 2.71l2.74 2.13c1.6-1.48 2.86-3.67 2.86-6.48z"/>
+                        <path fill="#FBBC05" d="M3.82 10.08A5.52 5.52 0 0 1 3.52 9c0-.38.07-.75.16-1.08 L.82 5.7A9 9 0 0 0 0 9c0 1.45.35 2.81.96 4.02l2.86-2.22z"/>
+                        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.17l-2.74-2.13 c-.76.51-1.73.86-3.22.86-2.48 0-4.6-1.56-5.18-3.72L.96 13.02C2.44 16.02 5.48 18 9 18z"/>
                     </svg>
                 </button>
                 &nbsp;
@@ -119,7 +115,6 @@ const Form = (props)=>{
                     <Image width={50} height={50} src="/btnW_icon_circle.png" alt={"Naver Login Button"}/>
                 </Link>
             </div>
-
             <div className="form-text fs-6 text-center">
                 Don't have an account yet?&nbsp;
                 <Link style={{color: 'var(--bs-blue)'}} href={"/member/register"}>Register now</Link>
