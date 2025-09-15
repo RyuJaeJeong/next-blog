@@ -106,4 +106,25 @@ export const authOptions = {
     adapter: NeonAdapter(pool)
 }
 
+/**
+ * 사용자 이메일, 비밀번호에 대한 유효성 검사 수행
+ * @param credentials 사용자 인증 정보
+ * @returns {boolean} 유효성 여부
+ */
+const validateUser = (credentials)=>{
+    let result = true;
+    let mailReg = /\S+@\S+\.\S+/;
+    if(!credentials.email){
+        result = false;
+    }else if(!credentials.email.match(mailReg)){
+        result = false;
+    }else if(!credentials.password){
+        result = false;
+    }else if(8 > credentials.password.length||64 < credentials.password.length){
+        result = false;
+    }
+
+    return result;
+}
+
 export default NextAuth(authOptions);
