@@ -45,7 +45,7 @@ export const authOptions = {
                 let user = null
                 try{
                     var conn = await pool.connect();
-                    if (!credentials.email || !credentials.password) {
+                    if (!validateUser(credentials)) {
                         throw new Error("Invalid credentials.")
                     }
 
