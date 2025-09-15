@@ -13,7 +13,7 @@ import Image from "next/image";
 const Form = (props)=>{
     const router = useRouter();
     const { register,handleSubmit, formState: { isSubmitting, isSubmitted, errors }} = useForm();
-    const { message } = React.use(props.searchParams)
+    const { message, error } = React.use(props.searchParams)
     const [isLoading, setIsLoading] = useState(false);
     const onSubmit = async (data)=>{
         setIsLoading(true)
@@ -33,8 +33,18 @@ const Form = (props)=>{
             setTimeout(() => {
                 router.replace('/member/login', { scroll: false });
             }, 200)
+        }else if(error){
+            if(error == 'OAuthAccountNotLinked'){
+                toast.error("already exist email")
+            }else{
+                toast.error(error)
+            }
+            setTimeout(() => {
+                router.replace('/member/login', { scroll: false });
+            }, 200)
         }
     }, [])
+
     return (
         <form className={`${styles.loginBox} mx-auto shadow p-3 bg-body-tertiary rounded`}
               onSubmit={handleSubmit(onSubmit)}>
