@@ -51,13 +51,13 @@ const Form = () => {
 
     return (
         <form id="registerForm" className={`text-end`} onSubmit={handleSubmit(onSubmit)}>
-            <Loading className={`${isLoading?"":"d-none"}`} />
-            <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"} />
+            <Loading className={`${isLoading ? "" : "d-none"}`}/>
+            <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"}/>
             <div className="form-floating">
                 <input
                     type="text"
                     id="name"
-                    name={"name"}
+                    name="name"
                     className={`form-control ${errors.name && "is-invalid"}`}
                     placeholder="Enter your name..."
                     aria-invalid={
@@ -75,34 +75,66 @@ const Form = () => {
                         }
                     })}
                 />
-                <label htmlFor="name">Name</label>
-                {errors.name && <div id="emailHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.name.message}</div>}
+                <label htmlFor="name">Name</label> {errors.name && <div id="emailHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.name.message}</div>}
             </div>
             <div className="form-floating">
                 <input
-                 type="email"
-                 id="email"
-                 name={"email"}
-                 className={`form-control ${!errors.name && errors.email && "is-invalid"}`}
-                 aria-invalid={
-                     isSubmitted ? (errors.email ? "true" : "false") : undefined
-                 }
-                 placeholder="Enter your email..."
-                 {...register("email", {
-                     required: "이메일은 필수 입력입니다.",
-                     pattern: {
-                         value: /\S+@\S+\.\S+/,
-                         message: "이메일 형식에 맞지 않습니다.",
-                     },
-                 })}/>
+                    type="email"
+                    id="email"
+                    name={"email"}
+                    className={`form-control ${!errors.name && errors.email && "is-invalid"}`}
+                    aria-invalid={
+                        isSubmitted ? (errors.email ? "true" : "false") : undefined
+                    }
+                    placeholder="Enter your email..."
+                    {...register("email", {
+                        required: "이메일은 필수 입력입니다.",
+                        pattern: {
+                            value: /\S+@\S+\.\S+/,
+                            message: "이메일 형식에 맞지 않습니다.",
+                        },
+                    })}/>
                 <label htmlFor="email">Email address</label>
                 {!errors.name && errors.email && <div id="emailHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.email.message}</div>}
+            </div>
+            <div className="row">
+                <div className="col-8 col-md-10 pe-0">
+                    <div className="form-floating">
+                        <input
+                            type="text"
+                            id="verificationCode"
+                            name="verificationCode"
+                            className={`form-control ${!errors.name && !errors.email && errors.verificationCode && "is-invalid"}`}
+                            aria-invalid={
+                                isSubmitted ? (errors.verificationCode ? "true" : "false") : undefined
+                            }
+                            placeholder="Enter your verification code"
+                            {...register("verificationCode", {
+                                required: "이메일 인증을 진행 하세요",
+                                minLength: {
+                                    value: 6,
+                                    message: "6자리 코드를 입력하세요.",
+                                },
+                                pattern: {
+                                    value: /[0-9]/,
+                                    message: "인증번호 형식에 맞지 않습니다.",
+                                },
+                            })}/>
+                        <label htmlFor="verificationCode">Verification Code</label>
+                        {!errors.name && !errors.email && errors.verificationCode && <div id="verificationCodeHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.verificationCode.message}</div>}
+                    </div>
+                </div>
+                <div className="col-4 col-md-2 d-flex align-items-end justify-content-end">
+                    <button type="button" className="btn btn-outline-primary" id="btnVerify" disabled={isSubmitting}>
+                        가입하기
+                    </button>
+                </div>
             </div>
             <div className="form-floating">
                 <input type="password"
                        id="password"
                        name={"password"}
-                       className={`form-control ${!errors.name && !errors.email && errors.password && "is-invalid"}`}
+                       className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && errors.password && "is-invalid"}`}
                        aria-invalid={
                            isSubmitted ? (errors.password ? "true" : "false") : undefined
                        }
@@ -117,8 +149,8 @@ const Form = () => {
                                value: 64,
                                message: "64자리 이하 비밀번호를 사용하세요.",
                            },
-                           onChange: (e)=>{
-                               zxcvbnAsync(e.target.value).then(result=>{
+                           onChange: (e) => {
+                               zxcvbnAsync(e.target.value).then(result => {
                                    const feedback = result.feedback.warning || result.feedback.suggestions[0] || "";
                                    setPasswordStrengthScore(result.score);
                                    setPasswordStrengthFeedback(feedback);
@@ -126,18 +158,18 @@ const Form = () => {
                            }
                        })} />
                 <label htmlFor="password">password</label>
-                {!errors.name && !errors.email && errors.password && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
-                {!errors.name && !errors.email && !errors.password && (passwordStrengthScore < 3) &&
-                    <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1?"text-danger":(passwordStrengthScore==2?"text-warning":"")} ${styles.errMessage}`}>
+                {!errors.name && !errors.email && !errors.verificationCode && errors.password && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
+                {!errors.name && !errors.email && !errors.verificationCode && !errors.password && (passwordStrengthScore < 3) &&
+                    <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1 ? "text-danger" : (passwordStrengthScore == 2 ? "text-warning" : "")} ${styles.errMessage}`}>
                         {passwordStrengthFeedback}
                     </div>
                 }
             </div>
-            <div className="form-floating">
+            <div className="form-floating mb-3">
                 <input type="password"
                        id="passwordCheck"
                        name={"passwordCheck"}
-                       className={`form-control ${!errors.name && !errors.email && !errors.password && errors.passwordCheck && "is-invalid"}`}
+                       className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && "is-invalid"}`}
                        aria-invalid={
                            isSubmitted ? (errors.passwordCheck ? "true" : "false") : undefined
                        }
@@ -152,13 +184,12 @@ const Form = () => {
                                value: 64,
                                message: "64자리 이하 비밀번호를 사용하세요.",
                            },
-                           validate: (value)=> value === watch("password") || "비밀번호가 일치하지 않습니다."
+                           validate: (value) => value === watch("password") || "비밀번호가 일치하지 않습니다."
                        })}
                 />
                 <label htmlFor="passwordCheck">confirm password</label>
-                {!errors.name && !errors.email && !errors.password && errors.passwordCheck && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.passwordCheck.message}</div>}
+                {!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.passwordCheck.message}</div>}
             </div>
-            <br/>
             <button type="submit" className="btn btn-primary" id="submitButton" disabled={isSubmitting}>
                 가입하기
             </button>

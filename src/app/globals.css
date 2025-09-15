@@ -10806,4 +10806,9 @@ html, body, #__next {
   height: 100%;
 }
 
+#btnVerify{
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 
