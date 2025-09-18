@@ -13,7 +13,7 @@ import { matcherPwnedFactory } from  '@zxcvbn-ts/matcher-pwned'
 const Form = () => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
-    const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }} = useForm();
+    const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }, getValues} = useForm();
     zxcvbnOptions.setOptions({
             translations: zxcvbnEnPackage.translations,
             graphs: zxcvbnCommonPackage.adjacencyGraphs,
@@ -47,6 +47,26 @@ const Form = () => {
             setIsLoading(false);
             toast.error(error.message)
         })
+    }
+
+    const doVerification = async (e)=>{
+        e.target.disabled = true;
+        try{
+            const email = getValues('email');
+            if(!email) {
+                e.target.disabled = false;
+                return toast.warning("email 주소를 입력 하세요");
+            }else if(!/\S+@\S+\.\S+/.test(email)){
+                e.target.disabled = false;
+                return toast.warning("이메일 형식에 맞지 않습니다.");
+            }
+            const res = await fetch(`/api/member/email/verification?email=${email}`);
+            const payload = await res.json();
+            console.log(payload);
+        }catch (e) {
+            e.target.disabled = false;
+            return toast.error(e);
+        }
     }
 
     return (
@@ -125,7 +145,9 @@ const Form = () => {
                     </div>
                 </div>
                 <div className="col-4 col-md-2 d-flex align-items-end justify-content-end">
-                    <button type="button" className="btn btn-outline-primary" id="btnVerify" disabled={isSubmitting}>
+                    <button type="button" className="btn btn-outline-primary px-3" id="btnVerify" onClick={(e)=>{
+                        doVerification(e)
+                    }}>
                         가입하기
                     </button>
                 </div>
