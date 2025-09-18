@@ -4,4 +4,14 @@
     <insert id="insertMember">
         INSERT INTO users(name, email, password) VALUES (#{name}, #{email}, #{password})
     </insert>
+
+    <insert id="insertVerification">
+        INSERT INTO t_memma03(email, seq)
+             SELECT #{email}
+                 ,  (SELECT COALESCE(MAX(T0.seq), 0) + 1 FROM t_memma03 T0 WHERE T0.email=#{email})
+          RETURNING email
+                  , seq
+                  , expires
+    </insert>
+
 </mapper>
