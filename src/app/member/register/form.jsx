@@ -15,12 +15,12 @@ const Form = () => {
     const router = useRouter();
     const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }, getValues} = useForm();
     zxcvbnOptions.setOptions({
-            translations: zxcvbnEnPackage.translations,
-            graphs: zxcvbnCommonPackage.adjacencyGraphs,
-            dictionary: {
-                ...zxcvbnCommonPackage.dictionary,
-                ...zxcvbnEnPackage.dictionary,
-            },
+        translations: zxcvbnEnPackage.translations,
+        graphs: zxcvbnCommonPackage.adjacencyGraphs,
+        dictionary: {
+            ...zxcvbnCommonPackage.dictionary,
+            ...zxcvbnEnPackage.dictionary,
+        },
     });
     const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
     zxcvbnOptions.addMatcher('pwned', matcherPwned)
@@ -31,16 +31,15 @@ const Form = () => {
         fetch(`/api/member`, {
             method: 'post',
             body: JSON.stringify(data)
-        })
-            .then(async res=>{
-                const data = await res.json()
-                if(!res.ok){
-                    throw new Error(`${data.msg}`)
-                }else{
-                    console.log(res.status)
-                    return data
-                }
-            }).then(res=>{
+        }).then(async res=>{
+            const data = await res.json()
+            if(!res.ok){
+                throw new Error(`${data.msg}`)
+            }else{
+                console.log(res.status)
+                return data
+            }
+        }).then(res=>{
             setIsLoading(false);
             router.push(`/member/login?message=${res.msg}`)
         }).catch(error=>{
@@ -141,14 +140,15 @@ const Form = () => {
                                 },
                             })}/>
                         <label htmlFor="verificationCode">Verification Code</label>
-                        {!errors.name && !errors.email && errors.verificationCode && <div id="verificationCodeHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.verificationCode.message}</div>}
+                        {!errors.name && !errors.email && errors.verificationCode && <div id="verificationCodeHelp" role="alert" className={`form-text text-danger ${styles.errMessage}`}>{errors.verificationCode.message}</div>}
+
                     </div>
                 </div>
                 <div className="col-4 col-md-2 d-flex align-items-end justify-content-end">
-                    <button type="button" className="btn btn-outline-primary px-3" id="btnVerify" onClick={(e)=>{
-                        doVerification(e)
+                    <button type="button" className="btn btn-outline-primary px-3" id="btnVerify" onClick={async (e)=>{
+                        await doVerification(e)
                     }}>
-                        가입하기
+                        인증하기
                     </button>
                 </div>
             </div>
