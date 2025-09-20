@@ -14,4 +14,16 @@
                   , expires
     </insert>
 
+    <select id="selectVerificationCode">
+        SELECT /* selectVerificationCode */
+               CASE WHEN verification_code = #{verificationCode} THEN true
+                    ELSE false
+                END AS "isVerified"
+          FROM t_memma03 T1
+         WHERE T1.email = #{email}
+           AND T1.expires >= now()
+      ORDER BY T1.seq DESC
+         LIMIT 1
+    </select>
+
 </mapper>

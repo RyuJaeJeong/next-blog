@@ -2,31 +2,78 @@
 import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Loading from "@/component/loading"
-import styles from "@/app/member/register/page.module.css"
-import {zxcvbn, zxcvbnAsync, zxcvbnOptions} from '@zxcvbn-ts/core'
+import { zxcvbnAsync, zxcvbnOptions } from '@zxcvbn-ts/core'
 import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
 import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en'
 import { matcherPwnedFactory } from  '@zxcvbn-ts/matcher-pwned'
+
+zxcvbnOptions.setOptions({
+    translations: zxcvbnEnPackage.translations,
+    graphs: zxcvbnCommonPackage.adjacencyGraphs,
+    dictionary: {
+        ...zxcvbnCommonPackage.dictionary,
+        ...zxcvbnEnPackage.dictionary,
+    },
+});
+const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
+zxcvbnOptions.addMatcher('pwned', matcherPwned);
 
 const Form = () => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }, getValues} = useForm();
-    zxcvbnOptions.setOptions({
-        translations: zxcvbnEnPackage.translations,
-        graphs: zxcvbnCommonPackage.adjacencyGraphs,
-        dictionary: {
-            ...zxcvbnCommonPackage.dictionary,
-            ...zxcvbnEnPackage.dictionary,
-        },
-    });
-    const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
-    zxcvbnOptions.addMatcher('pwned', matcherPwned)
     const [passwordStrengthScore, setPasswordStrengthScore] = useState(4);
     const [passwordStrengthFeedback, setPasswordStrengthFeedback] = useState("");
-    const onSubmit = async data => {
+    const [verifying, setVerifying] = useState(false);
+    const [expires, setExpires] = useState(null);
+    const [diff, setDiff] = useState(0);
+    const [expiresText, setExpiresText] = useState("");
+
+    useEffect(()=>{
+        if(diff > 0){
+            setTimeout(()=>{
+                setDiff(expires - new Date());
+                setExpiresText(diffToText(diff));
+            }, 1000);
+        }else if(diff <= 0){
+            setVerifying(false);
+        }
+    }, [diff]);
+
+    const doVerification = async (e)=>{
+        e.target.disabled = true;
+        try{
+            const email = getValues('email');
+            if(!email) {
+                e.target.disabled = false;
+                return toast.warning("email 주소를 입력 하세요");
+            }else if(!/\S+@\S+\.\S+/.test(email)){
+                e.target.disabled = false;
+                return toast.warning("이메일 형식에 맞지 않습니다.");
+            }
+            const res = await fetch(`/api/member/email/verification?email=${email}`);
+            const payload = await res.json();
+            setExpires(new Date(payload.data.expires));
+            setDiff(new Date(payload.data.expires) - new Date());
+            setVerifying(true);
+            e.target.disabled = false;
+        }catch (e) {
+            e.target.disabled = false;
+            return toast.error(e);
+        }
+    }
+
+    const diffToText = (diff)=>{
+        const oneSec = 1000
+        const oneMinute = 1000 * 60
+        const minute = (Math.floor(diff / oneMinute) + "").padStart(2, "0")
+        const sec = (Math.floor((diff - (minute * oneMinute))/oneSec) + "").padStart(2, "0")
+        return `${minute}:${sec}`
+    }
+
+    const doSubmit = async data => {
         setIsLoading(true)
         fetch(`/api/member`, {
             method: 'post',
@@ -48,28 +95,8 @@ const Form = () => {
         })
     }
 
-    const doVerification = async (e)=>{
-        e.target.disabled = true;
-        try{
-            const email = getValues('email');
-            if(!email) {
-                e.target.disabled = false;
-                return toast.warning("email 주소를 입력 하세요");
-            }else if(!/\S+@\S+\.\S+/.test(email)){
-                e.target.disabled = false;
-                return toast.warning("이메일 형식에 맞지 않습니다.");
-            }
-            const res = await fetch(`/api/member/email/verification?email=${email}`);
-            const payload = await res.json();
-            console.log(payload);
-        }catch (e) {
-            e.target.disabled = false;
-            return toast.error(e);
-        }
-    }
-
     return (
-        <form id="registerForm" className={`text-end`} onSubmit={handleSubmit(onSubmit)}>
+        <form id="registerForm" className={`text-end`} onSubmit={handleSubmit(doSubmit)}>
             <Loading className={`${isLoading ? "" : "d-none"}`}/>
             <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1500} theme={"colored"}/>
             <div className="form-floating">
@@ -94,7 +121,7 @@ const Form = () => {
                         }
                     })}
                 />
-                <label htmlFor="name">Name</label> {errors.name && <div id="emailHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.name.message}</div>}
+                <label htmlFor="name">Name</label> {errors.name && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.name.message}</div>}
             </div>
             <div className="form-floating">
                 <input
@@ -114,7 +141,7 @@ const Form = () => {
                         },
                     })}/>
                 <label htmlFor="email">Email address</label>
-                {!errors.name && errors.email && <div id="emailHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.email.message}</div>}
+                {!errors.name && errors.email && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.email.message}</div>}
             </div>
             <div className="row">
                 <div className="col-8 col-md-10 pe-0">
@@ -129,19 +156,21 @@ const Form = () => {
                             }
                             placeholder="Enter your verification code"
                             {...register("verificationCode", {
-                                required: "이메일 인증을 진행 하세요",
+                                required: "인증코드는 필수입력입니다.",
                                 minLength: {
                                     value: 6,
-                                    message: "6자리 코드를 입력하세요.",
+                                    message: "인증코드 형식에 맞지않습니다."
+                                },
+                                maxLength: {
+                                    value: 6,
+                                    message: "인증코드 형식에 맞지않습니다."
                                 },
                                 pattern: {
-                                    value: /[0-9]/,
-                                    message: "인증번호 형식에 맞지 않습니다.",
-                                },
+                                    value: [0-9],
+                                    message: "인증코드 형식에 맞지않습니다.",
+                                }
                             })}/>
                         <label htmlFor="verificationCode">Verification Code</label>
-                        {!errors.name && !errors.email && errors.verificationCode && <div id="verificationCodeHelp" role="alert" className={`form-text text-danger ${styles.errMessage}`}>{errors.verificationCode.message}</div>}
-
                     </div>
                 </div>
                 <div className="col-4 col-md-2 d-flex align-items-end justify-content-end">
@@ -152,14 +181,20 @@ const Form = () => {
                     </button>
                 </div>
             </div>
-            <div className="form-floating">
+            <div className={"row text-start"}>
+                { verifying &&
+                    <div id="verificationCodeHelp" role="alert" className={`form-text text-success fs-6`}>
+                        {expiresText}
+                    </div>
+                }
+                {!errors.name && !errors.email && !verifying && errors.verificationCode && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.verificationCode.message}</div>}
+            </div>
+            <div className="form-floating" >
                 <input type="password"
                        id="password"
-                       name={"password"}
+                       name="password"
                        className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && errors.password && "is-invalid"}`}
-                       aria-invalid={
-                           isSubmitted ? (errors.password ? "true" : "false") : undefined
-                       }
+                       aria-invalid={ isSubmitted ? (errors.password ? "true" : "false") : undefined }
                        placeholder="Enter your password..."
                        {...register("password", {
                            required: "비밀번호는 필수 입력입니다.",
@@ -180,9 +215,9 @@ const Form = () => {
                            }
                        })} />
                 <label htmlFor="password">password</label>
-                {!errors.name && !errors.email && !errors.verificationCode && errors.password && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.password.message}</div>}
+                {!errors.name && !errors.email && !errors.verificationCode && errors.password && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.password.message}</div>}
                 {!errors.name && !errors.email && !errors.verificationCode && !errors.password && (passwordStrengthScore < 3) &&
-                    <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1 ? "text-danger" : (passwordStrengthScore == 2 ? "text-warning" : "")} ${styles.errMessage}`}>
+                    <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1 ? "text-danger" : (passwordStrengthScore == 2 ? "text-warning" : "")} fs-6`}>
                         {passwordStrengthFeedback}
                     </div>
                 }
@@ -190,7 +225,7 @@ const Form = () => {
             <div className="form-floating mb-3">
                 <input type="password"
                        id="passwordCheck"
-                       name={"passwordCheck"}
+                       name="passwordCheck"
                        className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && "is-invalid"}`}
                        aria-invalid={
                            isSubmitted ? (errors.passwordCheck ? "true" : "false") : undefined
@@ -210,7 +245,7 @@ const Form = () => {
                        })}
                 />
                 <label htmlFor="passwordCheck">confirm password</label>
-                {!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && <div id="passHelp" role={"alert"} className={`form-text text-danger ${styles.errMessage}`}>{errors.passwordCheck.message}</div>}
+                {!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.passwordCheck.message}</div>}
             </div>
             <button type="submit" className="btn btn-primary" id="submitButton" disabled={isSubmitting}>
                 가입하기
