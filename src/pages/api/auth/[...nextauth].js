@@ -12,7 +12,7 @@ export const authOptions = {
     providers:[
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
         NaverProvider({
             clientId: process.env.NAVER_CLIENT_ID,
@@ -25,6 +25,7 @@ export const authOptions = {
                     name: p.name,  // name 없으면 nickname으로 폴백
                     email: p.email,
                     image: p.profile_image,
+                    emailVerified: new Date()
                 };
             },
         }),
@@ -103,7 +104,25 @@ export const authOptions = {
         signIn: '/member/login',
         error: '/member/login', // 에러 시 로그인 페이지로 리다이렉트
     },
-    adapter: NeonAdapter(pool)
+    adapter: NeonAdapter(pool),
+    events:{
+        linkAccount: async ({ user })=>{
+            if(!user.emailVerified){
+                try{
+                    var conn = await pool.connect();
+                    user.emailVerified = new Date();
+                    const sql = mybatisMapper.getStatement("authMapper", "updateEmailVerified", user)
+                    await conn.query(sql);
+                }catch (e) {
+                    console.error(e)
+                    return null
+                }finally {
+                    if(conn) conn.release();
+                }
+                return user
+            }
+        },
+    }
 }
 
 /**
