@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="memberMapper">
     <insert id="insertMember">
-        INSERT INTO users(name, email, password) VALUES (#{name}, #{email}, #{password})
+        INSERT INTO users(name, email, password, "emailVerified") VALUES (#{name}, #{email}, #{password}, now())
     </insert>
 
     <insert id="insertVerification">
