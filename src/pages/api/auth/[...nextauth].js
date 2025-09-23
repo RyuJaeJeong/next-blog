@@ -4,7 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import NaverProvider from "next-auth/providers/naver";
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
-import { mybatisMapper, pool } from "@/utils/db"
+import { mybatisMapper, pool } from "@/lib/db"
 
 
 

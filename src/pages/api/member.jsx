@@ -1,4 +1,4 @@
-import { pool, mybatisMapper } from "@/utils/db";
+import { pool, mybatisMapper } from "@/lib/db";
 import argon2  from "argon2";
 
 class VerificationError extends Error {
