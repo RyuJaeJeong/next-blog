@@ -1,13 +1,8 @@
 import { pool, mybatisMapper } from "@/lib/db";
+import { VerificationError } from "@/lib/errors";
 import argon2  from "argon2";
 
-class VerificationError extends Error {
-    constructor(message="이메일 인증에 실패하였습니다.") {
-        super(message);
-        this.name = "VerificationError";
-        this.code = 'E_VERIFICATION_FAILED'
-    }
-}
+
 
 const handler = async(req, res) =>{
     if(req.method == 'POST'){
