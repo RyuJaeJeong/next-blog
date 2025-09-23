@@ -55,13 +55,15 @@ const Form = () => {
             }
             const res = await fetch(`/api/member/email/verification?email=${email}`);
             const payload = await res.json();
+            if(!res.ok) throw new Error(payload.msg)
             setExpires(new Date(payload.data.expires));
             setDiff(new Date(payload.data.expires) - new Date());
             setVerifying(true);
             e.target.disabled = false;
-        }catch (e) {
+        }catch (error) {
+            console.log(error);
             e.target.disabled = false;
-            return toast.error(e);
+            return toast.error(error.message);
         }
     }
 

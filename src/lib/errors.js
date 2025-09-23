@@ -1,0 +1,15 @@
+export class EmailExistError extends Error{
+    constructor(message="이미 존재하는 이메일입니다.") {
+        super(message);
+        this.name = "EmailExistError";
+        this.code = "E_EMAIL_EXIST";
+    }
+}
+
+export class EmailValidationError extends Error{
+    constructor(message="이메일 형식이 올바르지 않습니다.") {
+        super(message);
+        this.name = "EmailValidationError";
+        this.code = "E_EMAIL_VALIDATION";
+    }
+}

@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
-import { pool, mybatisMapper } from "@/utils/db";
+import { pool, mybatisMapper } from "@/lib/db";
+import { EmailValidationError, EmailExistError } from "@/lib/errors";
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -19,9 +20,19 @@ const handler = async(req, res) => {
         try{
             var conn = await pool.connect();
             const { email } = req.query
-            const sql = mybatisMapper.getStatement("memberMapper", "insertVerification", {email: email})
+            if(!email.match(/\S+@\S+\.\S+/)) throw new EmailValidationError();
+            const param = {
+                email: email
+            }
+            let sql = mybatisMapper.getStatement("memberMapper", "selectEmail", param)
+            const result = await conn.query(sql);
+            const cnt = result.rows[0].cnt
             console.log(sql)
+            console.log("cnt: " + cnt)
+            if(cnt >= 1) throw new EmailExistError();
+            sql = mybatisMapper.getStatement("memberMapper", "insertVerification", param)
             const { rows } = await conn.query(sql);
+            console.log(sql)
             console.log(rows)
             await transporter.sendMail({
                 from: "ryoojj8998@gmail.com",
@@ -36,12 +47,12 @@ const handler = async(req, res) => {
                 data: rows[0]
             });
         }catch (e) {
-            console.error("예외가 발생 하였습니다.")
             console.error(e)
-            let msg = "서버 내부 에러입니다."
+            let msg = e.message || "서버 내부 에러입니다."
             return res.status(500).json({
                 code: 500,
-                msg: msg
+                msg: msg,
+                data: {}
             });
         }finally {
             if(conn) conn.release()
