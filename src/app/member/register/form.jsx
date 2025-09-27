@@ -3,11 +3,13 @@ import { toast, ToastContainer } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import {useEffect, useState} from "react";
+import { HelpMessageDanger, HelpMessageSuccess, HelpMessage } from '@/component/helpMessage'
 import Loading from "@/component/loading"
 import { zxcvbnAsync, zxcvbnOptions } from '@zxcvbn-ts/core'
 import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common'
 import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en'
 import { matcherPwnedFactory } from  '@zxcvbn-ts/matcher-pwned'
+
 
 zxcvbnOptions.setOptions({
     translations: zxcvbnEnPackage.translations,
@@ -21,9 +23,9 @@ const matcherPwned = matcherPwnedFactory(fetch, zxcvbnOptions);
 zxcvbnOptions.addMatcher('pwned', matcherPwned);
 
 const Form = () => {
-    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const { register,handleSubmit, watch, formState: { isSubmitting, isSubmitted, errors }, getValues} = useForm();
+    const [isLoading, setIsLoading] = useState(false);
     const [passwordStrengthScore, setPasswordStrengthScore] = useState(4);
     const [passwordStrengthFeedback, setPasswordStrengthFeedback] = useState("");
     const [verifying, setVerifying] = useState(false);
@@ -125,23 +127,20 @@ const Form = () => {
                     name="name"
                     className={`form-control ${errors.name && "is-invalid"}`}
                     placeholder="Enter your name..."
+                    minLength={2}
                     aria-invalid={
                         isSubmitted ? (errors.name ? "true" : "false") : undefined
                     }
                     {...register("name", {
                         required: "이름은 필수 입력입니다.",
                         pattern: {
-                            value: /[가-힣]/,
+                            value: /^[가-힣]{2,}$/,
                             message: "이름은 한글만 가능합니다."
-                        },
-                        minLength: {
-                            value: 2,
-                            message: "이름은 두자 이상 입력해 주세요"
                         }
                     })}
                 />
                 <label htmlFor="name">Name</label>
-                {checkCondition("name") && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.name.message}</div>}
+                {checkCondition("name") && <HelpMessageDanger message={errors.name.message} />}
             </div>
             <div className="form-floating">
                 <input
@@ -157,7 +156,7 @@ const Form = () => {
                         required: "이메일은 필수 입력입니다.",
                     })}/>
                 <label htmlFor="email">Email address</label>
-                {checkCondition("email") && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.email.message}</div>}
+                {checkCondition("email") && <HelpMessageDanger message={errors.name.message} />}
             </div>
             <div className="row">
                 <div className="col-8 col-md-10 pe-0">
@@ -173,16 +172,8 @@ const Form = () => {
                             placeholder="Enter your verification code"
                             {...register("verificationCode", {
                                 required: "인증코드는 필수입력입니다.",
-                                minLength: {
-                                    value: 6,
-                                    message: "인증코드 형식에 맞지않습니다."
-                                },
-                                maxLength: {
-                                    value: 6,
-                                    message: "인증코드 형식에 맞지않습니다."
-                                },
                                 pattern: {
-                                    value: [0-9],
+                                    value: /^[0-9]{6}$/,
                                     message: "인증코드 형식에 맞지않습니다.",
                                 }
                             })}/>
@@ -202,30 +193,20 @@ const Form = () => {
                 </div>
             </div>
             <div className={"row text-start"}>
-                { verifying &&
-                    <div id="verificationCodeHelp" role="alert" className={`form-text text-success fs-6`}>
-                        {expiresText}
-                    </div>
-                }
-                {checkCondition("verificationCode") && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.verificationCode.message}</div>}
+                {verifying && <HelpMessageSuccess message={expiresText} />}
+                {checkCondition("verificationCode") && <HelpMessageDanger message={errors.verificationCode.message} />}
             </div>
             <div className="form-floating" >
                 <input type="password"
                        id="password"
                        name="password"
                        className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && errors.password && "is-invalid"}`}
+                       minLength={8}
+                       maxLength={64}
                        aria-invalid={ isSubmitted ? (errors.password ? "true" : "false") : undefined }
                        placeholder="Enter your password..."
                        {...register("password", {
                            required: "비밀번호는 필수 입력입니다.",
-                           minLength: {
-                               value: 8,
-                               message: "8자리 이상 비밀번호를 사용하세요.",
-                           },
-                           maxLength: {
-                               value: 64,
-                               message: "64자리 이하 비밀번호를 사용하세요.",
-                           },
                            onChange: (e) => {
                                zxcvbnAsync(e.target.value).then(result => {
                                    const feedback = result.feedback.warning || result.feedback.suggestions[0] || "";
@@ -235,11 +216,12 @@ const Form = () => {
                            }
                        })} />
                 <label htmlFor="password">password</label>
-                {checkCondition("password") && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.password.message}</div>}
+                {checkCondition("password") && <HelpMessageDanger message={errors.password.message} />}
                 {checkCondition("password2") &&
-                    <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1 ? "text-danger" : (passwordStrengthScore == 2 ? "text-warning" : "")} fs-6`}>
-                        {passwordStrengthFeedback}
-                    </div>
+                    <HelpMessage
+                        message={passwordStrengthFeedback}
+                        textColor={`${0 <= passwordStrengthScore && passwordStrengthScore <= 1 ? "text-danger" : (passwordStrengthScore == 2 ? "text-warning" : "")}`}
+                    />
                 }
             </div>
             <div className="form-floating mb-3">
@@ -247,25 +229,20 @@ const Form = () => {
                        id="passwordCheck"
                        name="passwordCheck"
                        className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && "is-invalid"}`}
+                       minLength={8}
+                       maxLength={64}
                        aria-invalid={
                            isSubmitted ? (errors.passwordCheck ? "true" : "false") : undefined
                        }
                        placeholder="Enter your password..."
                        {...register("passwordCheck", {
                            required: "비밀번호 확인은 필수 입력입니다.",
-                           minLength: {
-                               value: 8,
-                               message: "8자리 이상 비밀번호를 사용하세요.",
-                           },
-                           maxLength: {
-                               value: 64,
-                               message: "64자리 이하 비밀번호를 사용하세요.",
-                           },
                            validate: (value) => value === watch("password") || "비밀번호가 일치하지 않습니다."
-                       })}
+                        })
+                       }
                 />
                 <label htmlFor="passwordCheck">confirm password</label>
-                {checkCondition("passwordCheck") && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.passwordCheck.message}</div>}
+                {checkCondition("passwordCheck") && <HelpMessageDanger message={errors.passwordCheck.message} />}
             </div>
             <button type="submit" className="btn btn-primary" id="submitButton" disabled={isSubmitting}>
                 가입하기
