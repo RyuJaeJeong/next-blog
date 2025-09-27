@@ -3,7 +3,6 @@ import { VerificationError } from "@/lib/errors";
 import argon2  from "argon2";
 
 
-
 const handler = async(req, res) =>{
     if(req.method == 'POST'){
         try{

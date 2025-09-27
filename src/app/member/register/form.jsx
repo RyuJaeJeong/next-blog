@@ -125,14 +125,17 @@ const Form = () => {
                     type="text"
                     id="name"
                     name="name"
-                    className={`form-control ${errors.name && "is-invalid"}`}
+                    className={`form-control ${checkCondition("name") && "is-invalid"}`}
                     placeholder="Enter your name..."
-                    minLength={2}
                     aria-invalid={
                         isSubmitted ? (errors.name ? "true" : "false") : undefined
                     }
                     {...register("name", {
                         required: "이름은 필수 입력입니다.",
+                        minLength: {
+                          value: 2,
+                          message: "이름은 2글자 이상입니다."
+                        },
                         pattern: {
                             value: /^[가-힣]{2,}$/,
                             message: "이름은 한글만 가능합니다."
@@ -147,13 +150,17 @@ const Form = () => {
                     type="email"
                     id="email"
                     name="email"
-                    className={`form-control ${!errors.name && errors.email && "is-invalid"}`}
+                    className={`form-control ${checkCondition("email") && "is-invalid"}`}
                     aria-invalid={
                         isSubmitted ? (errors.email ? "true" : "false") : undefined
                     }
                     placeholder="Enter your email..."
                     {...register("email", {
                         required: "이메일은 필수 입력입니다.",
+                        pattern: {
+                            value: /\S+@\S+\.\S+/,
+                            message: "유효한 이메일 형식이 아닙니다."
+                        }
                     })}/>
                 <label htmlFor="email">Email address</label>
                 {checkCondition("email") && <HelpMessageDanger message={errors.name.message} />}
@@ -200,13 +207,19 @@ const Form = () => {
                 <input type="password"
                        id="password"
                        name="password"
-                       className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && errors.password && "is-invalid"}`}
-                       minLength={8}
-                       maxLength={64}
+                       className={`form-control ${checkCondition("password") && "is-invalid"}`}
                        aria-invalid={ isSubmitted ? (errors.password ? "true" : "false") : undefined }
                        placeholder="Enter your password..."
                        {...register("password", {
                            required: "비밀번호는 필수 입력입니다.",
+                           minLength: {
+                               value: 8,
+                               message: "이름은 8글자 이상입니다."
+                           },
+                           maxLength: {
+                               value: 64,
+                               message: "이름은 64글자 이하입니다."
+                           },
                            onChange: (e) => {
                                zxcvbnAsync(e.target.value).then(result => {
                                    const feedback = result.feedback.warning || result.feedback.suggestions[0] || "";
@@ -228,15 +241,21 @@ const Form = () => {
                 <input type="password"
                        id="passwordCheck"
                        name="passwordCheck"
-                       className={`form-control ${!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && "is-invalid"}`}
-                       minLength={8}
-                       maxLength={64}
+                       className={`form-control ${checkCondition("passwordCheck") && "is-invalid"}`}
                        aria-invalid={
                            isSubmitted ? (errors.passwordCheck ? "true" : "false") : undefined
                        }
                        placeholder="Enter your password..."
                        {...register("passwordCheck", {
                            required: "비밀번호 확인은 필수 입력입니다.",
+                           minLength: {
+                               value: 8,
+                               message: "이름은 8글자 이상입니다."
+                           },
+                           maxLength: {
+                               value: 64,
+                               message: "이름은 64글자 이하입니다."
+                           },
                            validate: (value) => value === watch("password") || "비밀번호가 일치하지 않습니다."
                         })
                        }

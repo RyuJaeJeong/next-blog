@@ -1,12 +1,12 @@
 const HelpMessageDanger = (props) => {
     return (
-        <div role="alert" className={`form-text text-danger fs-6`}>{props.message}</div>
+        <div role="alert" className={`invalid-feedback`}>{props.message}</div>
     )
 }
 
 const HelpMessageSuccess = (props) => {
     return (
-        <div role="alert" className={`form-text text-success fs-6`}>{props.message}</div>
+        <div role="alert" className={`valid-feedback`}>{props.message}</div>
     )
 }
 
