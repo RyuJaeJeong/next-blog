@@ -24,23 +24,23 @@ const handler = async(req, res) => {
             const param = {
                 email: email
             }
-            let sql = mybatisMapper.getStatement("memberMapper", "selectEmail", param)
+            let sql = mybatisMapper.getStatement("memberMapper", "selectEmail", param);
             const result = await conn.query(sql);
-            const cnt = result.rows[0].cnt
-            console.log(sql)
-            console.log("cnt: " + cnt)
+            const cnt = result.rows[0].cnt;
+            console.log(sql);
+            console.log("cnt: " + cnt);
             if(cnt >= 1) throw new EmailExistError();
-            sql = mybatisMapper.getStatement("memberMapper", "insertVerification", param)
+            sql = mybatisMapper.getStatement("memberMapper", "insertVerification", param);
             const { rows } = await conn.query(sql);
-            console.log(sql)
-            console.log(rows)
-            await transporter.sendMail({
+            console.log(sql);
+            console.log(rows);
+            const sendMailRes = await transporter.sendMail({
                 from: "ryoojj8998@gmail.com",
                 to: rows[0].email,
                 subject: "Next.log()에서 이메일 인증번호가 도착하였습니다",
                 text: `인증번호: ${rows[0].verification_code}`,
             });
-
+            console.log(sendMailRes);
             return res.status(200).json({
                 code: 200,
                 msg: "success",
