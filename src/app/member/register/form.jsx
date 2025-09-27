@@ -97,6 +97,23 @@ const Form = () => {
         })
     }
 
+    const checkCondition = (name) => {
+        switch (name) {
+            case "name":
+                return errors.name ;
+            case "email":
+                return !errors.name && errors.email;
+            case "verificationCode":
+                return !errors.name && !errors.email && !verifying && errors.verificationCode;
+            case "password":
+                return !errors.name && !errors.email && !errors.verificationCode && errors.password;
+            case "password2":
+                return !errors.name && !errors.email && !errors.verificationCode && !errors.password && (passwordStrengthScore < 3);
+            case "passwordCheck":
+                return !errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck;
+        }
+    }
+
     return (
         <form id="registerForm" className={`text-end`} onSubmit={handleSubmit(doSubmit)}>
             <Loading className={`${isLoading ? "" : "d-none"}`}/>
@@ -123,13 +140,14 @@ const Form = () => {
                         }
                     })}
                 />
-                <label htmlFor="name">Name</label> {errors.name && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.name.message}</div>}
+                <label htmlFor="name">Name</label>
+                {checkCondition("name") && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.name.message}</div>}
             </div>
             <div className="form-floating">
                 <input
                     type="email"
                     id="email"
-                    name={"email"}
+                    name="email"
                     className={`form-control ${!errors.name && errors.email && "is-invalid"}`}
                     aria-invalid={
                         isSubmitted ? (errors.email ? "true" : "false") : undefined
@@ -137,13 +155,9 @@ const Form = () => {
                     placeholder="Enter your email..."
                     {...register("email", {
                         required: "이메일은 필수 입력입니다.",
-                        pattern: {
-                            value: /\S+@\S+\.\S+/,
-                            message: "이메일 형식에 맞지 않습니다.",
-                        },
                     })}/>
                 <label htmlFor="email">Email address</label>
-                {!errors.name && errors.email && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.email.message}</div>}
+                {checkCondition("email") && <div id="emailHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.email.message}</div>}
             </div>
             <div className="row">
                 <div className="col-8 col-md-10 pe-0">
@@ -176,9 +190,13 @@ const Form = () => {
                     </div>
                 </div>
                 <div className="col-4 col-md-2 d-flex align-items-end justify-content-end">
-                    <button type="button" className="btn btn-outline-primary px-3" id="btnVerify" onClick={async (e)=>{
-                        await doVerification(e)
-                    }}>
+                    <button type="button"
+                            id="btnVerify"
+                            className="btn btn-outline-primary px-3"
+                            onClick={async (e)=>{
+                                await doVerification(e)
+                            }
+                    }>
                         인증하기
                     </button>
                 </div>
@@ -189,7 +207,7 @@ const Form = () => {
                         {expiresText}
                     </div>
                 }
-                {!errors.name && !errors.email && !verifying && errors.verificationCode && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.verificationCode.message}</div>}
+                {checkCondition("verificationCode") && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.verificationCode.message}</div>}
             </div>
             <div className="form-floating" >
                 <input type="password"
@@ -217,8 +235,8 @@ const Form = () => {
                            }
                        })} />
                 <label htmlFor="password">password</label>
-                {!errors.name && !errors.email && !errors.verificationCode && errors.password && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.password.message}</div>}
-                {!errors.name && !errors.email && !errors.verificationCode && !errors.password && (passwordStrengthScore < 3) &&
+                {checkCondition("password") && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.password.message}</div>}
+                {checkCondition("password2") &&
                     <div id="passHelp2" role="alert" className={`form-text ${0 <= passwordStrengthScore && passwordStrengthScore <= 1 ? "text-danger" : (passwordStrengthScore == 2 ? "text-warning" : "")} fs-6`}>
                         {passwordStrengthFeedback}
                     </div>
@@ -247,7 +265,7 @@ const Form = () => {
                        })}
                 />
                 <label htmlFor="passwordCheck">confirm password</label>
-                {!errors.name && !errors.email && !errors.verificationCode && !errors.password && errors.passwordCheck && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.passwordCheck.message}</div>}
+                {checkCondition("passwordCheck") && <div id="passHelp" role={"alert"} className={`form-text text-danger fs-6`}>{errors.passwordCheck.message}</div>}
             </div>
             <button type="submit" className="btn btn-primary" id="submitButton" disabled={isSubmitting}>
                 가입하기
