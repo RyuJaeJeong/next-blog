@@ -3,15 +3,10 @@ import { pool, mybatisMapper } from "@/lib/db";
 import { EmailValidationError, EmailExistError } from "@/lib/errors";
 
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+    service: "gmail",
     auth:{
-        type: "OAuth2",
-        user: "ryoojj8998@gmail.com",
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        refreshToken: process.env.GOOGLE_CLIENT_TOKEN,
+        user: process.env.GOOGLE_APP_USER,
+        pass: process.env.GOOGLE_APP_PASS,
     }
 });
 
