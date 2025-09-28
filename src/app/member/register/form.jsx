@@ -32,6 +32,7 @@ const Form = () => {
     const [expires, setExpires] = useState(null);
     const [diff, setDiff] = useState(0);
     const [expiresText, setExpiresText] = useState("");
+    const [disableBtnVerify, setDisableBtnVerify] = useState(false);
 
     useEffect(()=>{
         if(diff > 0){
@@ -44,15 +45,15 @@ const Form = () => {
         }
     }, [diff]);
 
-    const doVerification = async (e)=>{
-        e.target.disabled = true;
+    const doVerification = async ()=>{
+        setDisableBtnVerify(true);
         try{
             const email = getValues('email');
             if(!email) {
-                e.target.disabled = false;
+                setDisableBtnVerify(false);
                 return toast.warning("email 주소를 입력 하세요");
             }else if(!/\S+@\S+\.\S+/.test(email)){
-                e.target.disabled = false;
+                setDisableBtnVerify(false);
                 return toast.warning("이메일 형식에 맞지 않습니다.");
             }
             const res = await fetch(`/api/member/email/verification?email=${email}`);
@@ -61,10 +62,10 @@ const Form = () => {
             setExpires(new Date(payload.data.expires));
             setDiff(new Date(payload.data.expires) - new Date());
             setVerifying(true);
-            e.target.disabled = false;
+            setDisableBtnVerify(false);
         }catch (error) {
             console.log(error);
-            e.target.disabled = false;
+            setDisableBtnVerify(false);
             return toast.error(error.message);
         }
     }
@@ -191,11 +192,14 @@ const Form = () => {
                     <button type="button"
                             id="btnVerify"
                             className="btn btn-outline-primary px-3"
-                            onClick={async (e)=>{
-                                await doVerification(e)
+                            disabled={disableBtnVerify}
+                            onClick={async () => {
+                                await doVerification()
                             }
-                    }>
-                        인증하기
+                            }>
+                        {disableBtnVerify?"":"인증하기"}
+                        <span className={`spinner-border spinner-border-sm ${disableBtnVerify?"":"visually-hidden"}`} aria-hidden="true"></span>
+                        <span className={`${disableBtnVerify?"":"visually-hidden"}`} role="status"> 로딩..</span>
                     </button>
                 </div>
             </div>
