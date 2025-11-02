@@ -10,7 +10,7 @@ const handler = async(req, res) =>{
             const param = JSON.parse(req.body);
             let sql = mybatisMapper.getStatement("memberMapper", "selectVerificationCode", param);
             let { rows } = await conn.query(sql);
-            if(!rows[0].isVerified) throw new VerificationError();
+            if(rows.length < 1 || !rows[0].isVerified) throw new VerificationError();
             param.password = await argon2.hash(param.password, { secret:  Buffer.from(process.env.PASSWORD_PEPPER) });
             sql = mybatisMapper.getStatement("memberMapper", "insertMember", param);
             const result = await conn.query(sql);
