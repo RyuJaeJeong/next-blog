@@ -2,18 +2,17 @@ import nodemailer from 'nodemailer';
 import { pool, mybatisMapper } from "@/lib/db";
 import { EmailValidationError, EmailExistError } from "@/lib/errors";
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth:{
-        user: process.env.GOOGLE_APP_USER,
-        pass: process.env.GOOGLE_APP_PASS,
-    }
-});
-
 const handler = async(req, res) => {
     if(req.method == 'GET'){
         try{
             var conn = await pool.connect();
+            const transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth:{
+                    user: process.env.GOOGLE_APP_USER,
+                    pass: process.env.GOOGLE_APP_PASS,
+                }
+            });
             const { email } = req.query
             if(!email.match(/\S+@\S+\.\S+/)) throw new EmailValidationError();
             const param = {
