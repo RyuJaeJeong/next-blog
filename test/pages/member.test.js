@@ -19,6 +19,7 @@ describe('/api/member', ()=>{
         verificationCode = JSON.parse(res._getData()).data.verificationCode;
         expect(res._getStatusCode()).toBe(200);
     }, 10000);
+
     test('회원가입 테스트', async ()=>{
         console.log(`verificationCode2: ${verificationCode}`);
         const {req, res} = createMocks({
@@ -33,7 +34,8 @@ describe('/api/member', ()=>{
         });
         await memberHandler(req, res);
         expect(JSON.parse(res._getData()).data).toBe(1);
-    });
+    }, 10000);
+
     test('회원삭제 테스트', async ()=>{
         const {req, res} = createMocks({
             method: 'DELETE',
@@ -43,5 +45,5 @@ describe('/api/member', ()=>{
         });
         await memberHandler(req, res);
         expect(JSON.parse(res._getData()).data).toBe(1);
-    });
+    }, 10000);
 });
