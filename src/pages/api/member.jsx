@@ -14,6 +14,7 @@ const handler = async(req, res) =>{
             param.password = await argon2.hash(param.password, { secret:  Buffer.from(process.env.PASSWORD_PEPPER) });
             sql = mybatisMapper.getStatement("memberMapper", "insertMember", param);
             const result = await conn.query(sql);
+            console.log(result);
             return res.status(200).json({
                 code: 200,
                 msg: "success",
@@ -28,6 +29,35 @@ const handler = async(req, res) =>{
             return res.status(500).json({
                 code: 500,
                 msg: msg
+            });
+        }finally {
+            if(conn) conn.release();
+        }
+    }else if(req.method == 'DELETE'){
+        try{
+            var conn = await pool.connect();
+            const param = req.query;
+            const sql = mybatisMapper.getStatement("memberMapper", "deleteMember", param);
+            const { rowCount } = await conn.query(sql);
+            if(rowCount > 0){
+                return res.status(200).json({
+                    code: 200,
+                    msg: "success",
+                    data: rowCount
+                });
+            }else{
+                return res.status(404).json({
+                    code: 404,
+                    msg: "not exist",
+                    data: rowCount
+                });
+            }
+        }catch (e) {
+            console.error("예외가 발생 하였습니다.");
+            console.error(e);
+            return res.status(500).json({
+                code: 500,
+                msg: "internal server error"
             });
         }finally {
             if(conn) conn.release();

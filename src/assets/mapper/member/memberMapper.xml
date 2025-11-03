@@ -5,6 +5,12 @@
         INSERT INTO users(name, email, password, "emailVerified") VALUES (#{name}, #{email}, #{password}, now())
     </insert>
 
+    <delete id="deleteMember">
+        DELETE /* deleteMember*/
+          FROM users
+         WHERE email = #{email}
+    </delete>
+
     <insert id="insertVerification">
         INSERT INTO t_memma03(email, seq)
              SELECT #{email}
