@@ -10811,10 +10811,14 @@ html, body, #__next {
   padding-right: 10px;
 }
 
+.custom-dropdown-item{
+  color: var(--bs-dropdown-link-hover-color);
+  font-size: 0.95rem;
+}
+
 .custom-dropdown-item:active{
   color: var(--bs-dropdown-link-hover-color);
   background-color: #dee2e6;
-  font-size: 0.95rem;
 }
 
 
