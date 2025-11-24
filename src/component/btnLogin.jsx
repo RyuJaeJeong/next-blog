@@ -6,25 +6,56 @@ import {signIn, signOut} from "next-auth/react";
 
 const Menu = ()=>{
     const { data: session, status } = useSession()
-    const userNm = (session)?session.user.name:"로그인"
-    const action = ()=>{
-        if(!session){
-            signIn()
-        }else{
-            signOut()
-        }
+
+    if(session){
+        const userNm = session?.user?.name
+        return(
+            <>
+                <Link className="nav-link px-lg-3 py-3 py-lg-4"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      data-bs-auto-close="outside"
+                      href="#"
+                >
+                    {userNm}
+                </Link>
+                <ul className="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <button className="dropdown-item custom-dropdown-item" type="button">Action</button>
+                    </li>
+                    <li>
+                        <button className="dropdown-item custom-dropdown-item" type="button">Another action</button>
+                    </li>
+                    <li>
+                        <button className="dropdown-item custom-dropdown-item" type="button" onClick={()=>{
+                            signOut()
+                        }}>
+                            로그아웃
+                        </button>
+                    </li>
+                </ul>
+            </>
+
+        )
+    }else{
+        return (
+            <Link className="nav-link px-lg-3 py-3 py-lg-4"
+                  href="#"
+                  onClick={() => {
+                      signIn();
+                  }}
+            >
+                로그인
+            </Link>
+        )
     }
-    return(
-        <Link className="nav-link px-lg-3 py-3 py-lg-4" href="#" onClick={()=>{
-            action()
-        }}>{userNm}</Link>
-    )
+
 }
 
-const BtnLogin = ()=>{
-    return(
+const BtnLogin = () => {
+    return (
         <SessionProvider>
-            <Menu />
+            <Menu/>
         </SessionProvider>
     )
 }

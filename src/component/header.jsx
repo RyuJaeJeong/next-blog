@@ -25,7 +25,7 @@ const Header = (props) => {
                             <li className="nav-item">
                                 <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article/form">Form</Link>
                             </li>
-                            <li className="nav-item">
+                            <li className="nav-item dropdown">
                                 <BtnLogin />
                             </li>
                         </ul>

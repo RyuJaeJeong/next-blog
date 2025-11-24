@@ -10806,5 +10806,15 @@ html, body, #__next {
   height: 100%;
 }
 
+.dropdown-menu > li{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.custom-dropdown-item:active{
+  color: var(--bs-dropdown-link-hover-color);
+  background-color: #dee2e6;
+  font-size: 0.95rem;
+}
 
 
