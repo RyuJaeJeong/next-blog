@@ -28,7 +28,7 @@ const Menu = ()=>{
                     </li>
                     <li>
                         <button className="dropdown-item custom-dropdown-item" type="button" onClick={()=>{
-                            signOut()
+                            if(confirm('정말 로그아웃 하시겠습니까?')) signOut();
                         }}>
                             로그아웃
                         </button>
