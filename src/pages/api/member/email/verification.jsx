@@ -20,7 +20,7 @@ const handler = async(req, res) => {
             }
             let sql = mybatisMapper.getStatement("memberMapper", "selectEmail", param);
             const result = await conn.query(sql);
-            const cnt = result.rows[0].cnt;
+            const cnt = result.rows[0]?.cnt;
             console.log(sql);
             console.log("cnt: " + cnt);
             if(cnt >= 1) throw new EmailExistError();
@@ -30,9 +30,9 @@ const handler = async(req, res) => {
             console.log(rows);
             const emailForm = getEmailForm(rows[0].verificationCode)
             const sendMailRes = await transporter.sendMail({
-                from: "ryoojj8998@gmail.com",
+                from: process.env.EMAIL_FROM,
                 to: rows[0].email,
-                subject: "Next.log()에서 이메일 인증번호가 도착하였습니다",
+                subject: process.env.EMAIL_SUBJECT,
                 html: emailForm,
             });
             console.log(sendMailRes);
