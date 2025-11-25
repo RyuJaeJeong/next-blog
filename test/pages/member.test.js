@@ -7,30 +7,32 @@ describe('/api/member', ()=>{
     beforeEach(()=>{
         return dotenv.config({ path: '.env.local' });
     });
-    let verificationCode;
+
+    const userData = {
+        name: "류재정",
+        email: "testfinal@example.com",
+        verificationCode: null,
+        password: "testfinal",
+        passwordCheck: "testfinal"
+    }
+
     test('이메일 인증코드 발행', async ()=>{
         const {req, res} = createMocks({
             method: 'GET',
             query: {
-                email: 'test235@example.com'
+                email: userData.email
             }
         });
         await verificationHandler(req, res);
-        verificationCode = JSON.parse(res._getData()).data.verificationCode;
+        userData.verificationCode = JSON.parse(res._getData()).data.verificationCode;
         expect(res._getStatusCode()).toBe(200);
     }, 10000);
 
     test('회원가입 테스트', async ()=>{
-        console.log(`verificationCode2: ${verificationCode}`);
+        console.log(`verificationCode2: ${userData.verificationCode}`);
         const {req, res} = createMocks({
             method: 'POST',
-            body: JSON.stringify({
-                name: "류재정",
-                email: "test235@example.com",
-                verificationCode: verificationCode,
-                password: "123",
-                passwordCheck: "123"
-            })
+            body: JSON.stringify(userData)
         });
         await memberHandler(req, res);
         expect(JSON.parse(res._getData()).data).toBe(1);
@@ -40,7 +42,7 @@ describe('/api/member', ()=>{
         const {req, res} = createMocks({
             method: 'DELETE',
             query: {
-                email: "test235@example.com",
+                email: userData.email,
             }
         });
         await memberHandler(req, res);
