@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Header from '@/component/header'
+import BtnGoForm from '@/app/article/btnGoForm'
 
 const home = ()=>{
   return(
@@ -61,7 +62,7 @@ const home = ()=>{
               </div>
               <hr className="my-4"/>
               <div className="d-flex justify-content-end mb-4">
-                <a className="btn btn-primary text-uppercase" href="#!">Older Posts →</a>
+                <BtnGoForm />
               </div>
             </div>
           </div>
