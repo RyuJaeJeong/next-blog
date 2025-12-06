@@ -1,61 +1,78 @@
+"use client"
 import Header from '@/component/header'
+import Tiptap from '@/component/tiptap'
+import Styles from '@/app/article/form/page.module.css'
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
+import { HelpMessageDanger, HelpMessageSuccess, HelpMessage } from '@/component/helpMessage'
+import * as React from "react";
+import {useRouter} from "next/navigation";
+
 
 const Form = ()=>{
+    const router = useRouter();
+    const { register, handleSubmit, formState: { isSubmitting, isSubmitted, errors }, setValue} = useForm();
+
+    register('content', {
+        required: '내용을 입력해주세요',
+        minLength: { value: 10, message: '최소 10자 이상 입력 해 주세요' }
+    });
+
+    const doSubmit = async (data) => {
+        try{
+            const response = await fetch('/api/article', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            const payload = await response.json();
+            if(payload.code == 500){
+                throw new Error(payload.msg);
+            }else if(payload.code == 200){
+                router.push("/article");
+            }
+        }catch (e) {
+            console.error(e);
+            toast.error(e.message)
+        }
+    }
     return(
         <>
-            <Header image={"/contact-bg.webp"}
-                    head={"Form Page"}
-                    subhead={"Have questions? I have answers"}
-                    meta={""}
-                    isPost={false}/>
+            <Header image={"/contact-bg.webp"} head={"Form Page"} subhead={"Have questions? I have answers"} meta={""} isPost={false}/>
+            <ToastContainer position={"bottom-center"} pauseOnHover={false} autoClose={1000} theme={"colored"}/>
             <main className="mb-4">
                 <div className="container px-4 px-lg-5">
                     <div className="row gx-4 gx-lg-5 justify-content-center">
                         <div className="col-md-10 col-lg-8 col-xl-7">
-                            <p>
-                                Want to get in touch? Fill out the form below to send me a message and I will get back to
-                                you as soon as possible!
-                            </p>
                             <div className="my-5">
-                                <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+                                <form id="contactForm" onSubmit={handleSubmit(doSubmit)}>
                                     <div className="form-floating">
-                                        <input className="form-control" id="name" type="text"
-                                               placeholder="Enter your name..." data-sb-validations="required"/>
-                                        <label htmlFor="name">Name</label>
-                                        <div className="invalid-feedback" data-sb-feedback="name:required">A name is
-                                            required.
-                                        </div>
+                                        <input type="text"
+                                               id="title"
+                                               name="title"
+                                               className="form-control"
+                                               {...register("title", {
+                                                    required: "제목은 필수 입력입니다.",
+                                                    minLength: {
+                                                        value: 2,
+                                                        message: "제목은 2글자 이상입니다."
+                                                    },
+                                                    maxLength: {
+                                                        value: 20,
+                                                        message: "제목은 최대 255자 까지입니다."
+                                                    }
+                                               })}
+                                        />
+                                        <label htmlFor="title">Title</label>
+                                        {errors.title && <HelpMessageDanger message={`[ERROR]: ${errors.title.message}`} />}
                                     </div>
                                     <div className="form-floating">
-                                        <input className="form-control" id="email" type="email"
-                                               placeholder="Enter your email..." data-sb-validations="required,email"/>
-                                        <label htmlFor="email">Email address</label>
-                                        <div className="invalid-feedback" data-sb-feedback="email:required">An email is
-                                            required.
-                                        </div>
-                                        <div className="invalid-feedback" data-sb-feedback="email:email">Email is not
-                                            valid.
-                                        </div>
-                                    </div>
-                                    <div className="form-floating">
-                                        <input className="form-control" id="phone" type="tel"
-                                               placeholder="Enter your phone number..." data-sb-validations="required"/>
-                                        <label htmlFor="phone">Phone Number</label>
-                                        <div className="invalid-feedback" data-sb-feedback="phone:required">A phone
-                                            number is required.
-                                        </div>
-                                    </div>
-                                    <div className="form-floating">
-                                        <textarea className="form-control" id="message"
-                                                  placeholder="Enter your message here..." style={{height: "12rem"}}
-                                                  data-sb-validations="required"></textarea>
-                                        <label htmlFor="message">Message</label>
-                                        <div className="invalid-feedback" data-sb-feedback="message:required">A message
-                                            is required.
-                                        </div>
+                                        <p className={Styles.editorLabel}>Content</p>
+                                        <Tiptap id="content" name="content" setValue={setValue} className={`form-control ${Styles.editorBody}`}/>
+                                        {!errors.title && errors.content && <HelpMessageDanger message={`[ERROR]: ${errors.content.message}`} />}
                                     </div>
                                     <br/>
-                                    <button className="btn btn-primary text-uppercase disabled" id="submitButton" type="submit">
+                                    <button type="submit" id="btnSubmit" className="btn btn-primary text-uppercase" disabled={isSubmitting} >
                                         Send
                                     </button>
                                 </form>

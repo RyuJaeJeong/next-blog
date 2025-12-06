@@ -10821,4 +10821,9 @@ html, body, #__next {
   background-color: #dee2e6;
 }
 
+.tiptap p{
+  margin: 0.5em 0;
+}
+
+
 
