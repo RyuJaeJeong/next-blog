@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import {useEffect} from "react";
 
-const Tiptap = ({id, name, setValue, className}) => {
+const Editor = ({id, name, setValue, className}) => {
     const editor = useEditor({
         extensions: [StarterKit],
         content: '',
@@ -29,4 +29,4 @@ const Tiptap = ({id, name, setValue, className}) => {
     )
 }
 
-export default Tiptap
+export default Editor

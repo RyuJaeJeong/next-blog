@@ -20,7 +20,7 @@ const Header = (props) => {
                                 <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article">List</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article/1">Sample Post</Link>
+                                <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article/20251207/1">Sample Post</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link px-lg-3 py-3 py-lg-4" href="/article/form">Form</Link>

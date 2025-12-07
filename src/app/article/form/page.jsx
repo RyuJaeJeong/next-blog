@@ -1,6 +1,6 @@
 "use client"
 import Header from '@/component/header'
-import Tiptap from '@/component/tiptap'
+import Editor from '@/component/tiptap/editor'
 import Styles from '@/app/article/form/page.module.css'
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -68,7 +68,7 @@ const Form = ()=>{
                                     </div>
                                     <div className="form-floating">
                                         <p className={Styles.editorLabel}>Content</p>
-                                        <Tiptap id="content" name="content" setValue={setValue} className={`form-control ${Styles.editorBody}`}/>
+                                        <Editor id="content" name="content" setValue={setValue} className={`form-control ${Styles.editorBody}`}/>
                                         {!errors.title && errors.content && <HelpMessageDanger message={`[ERROR]: ${errors.content.message}`} />}
                                     </div>
                                     <br/>
