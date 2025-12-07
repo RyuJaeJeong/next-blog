@@ -15,7 +15,18 @@
                   , now()
     </insert>
 
-
-
+    <select id="selectArticle">
+        SELECT T1.article_dt                                  AS "articleDt"
+            ,  T1.article_seq                                 AS "articleSeq"
+            ,  T1.article_title                               AS "articleTitle"
+            ,  T1.article_content                             AS "articleContent"
+            ,  T1.inp_id                                      AS "inpId"
+            ,  T2.name                                        AS "inpNm"
+            ,  to_char(T1.inp_dttm, 'YYYY년 MM월 DD일')        AS "inpDttm"
+          FROM t_artma01 T1 INNER JOIN users T2
+            ON T1.inp_id = T2.id
+         WHERE T1.article_dt = #{articleDt}
+           AND T1.article_seq = #{articleSeq}
+    </select>
 
 </mapper>
