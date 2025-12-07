@@ -20,7 +20,6 @@ const handler = async(req, res)=>{
                 data: result.rowCount
             });
         }catch (e) {
-            console.error("EEEEEEEEEEEEEEEE");
             console.error(e);
             return res.status(500).json({
                 code: 500,
