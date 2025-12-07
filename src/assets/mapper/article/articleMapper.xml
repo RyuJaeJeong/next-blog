@@ -5,7 +5,7 @@
     <insert id="insertArticle">
         INSERT INTO t_artma01 (article_dt, article_seq, article_title, article_content, inp_id, inp_dttm, upd_id, upd_dttm)
              SELECT /* insertArticle */
-                    now()::date
+                    TO_CHAR(now(), 'YYYYMMDD')
                   , (SELECT COALESCE(MAX(T0.article_seq), 0) + 1 FROM t_artma01 T0 WHERE T0.article_dt=(now()::DATE))
                   , #{title}
                   , #{content}
@@ -13,7 +13,9 @@
                   , now()
                   , #{userId}
                   , now()
-
     </insert>
+
+
+
 
 </mapper>
