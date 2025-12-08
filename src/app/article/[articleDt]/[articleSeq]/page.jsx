@@ -11,10 +11,10 @@ const Article = async (props) => {
     const articleResponse = await fetch(`${process.env.API_URL}/api/article/${articleDt}/${articleSeq}`);
     const articlePayload = await articleResponse.json();
     if(articlePayload.code == 404) notFound();
-    const { articleTitle, articleContent, inpNm, inpDttm } = articlePayload.data
+    const { articleTitle, articleSubTitle, articleContent, inpNm, inpDttm } = articlePayload.data
     return(
         <>
-            <Header image={"/post-bg.webp"} head={articleTitle} subhead={"Problems look mighty small from 150 miles up"} meta={`${inpDttm}, ${inpNm}에 의해 작성됨`} isPost={true}/>
+            <Header image={"/post-bg.webp"} head={articleTitle} subhead={articleSubTitle} meta={`${inpDttm}, ${inpNm}에 의해 작성됨`} isPost={true}/>
             <div className="mb-4">
                 <div className="container px-4 px-lg-5">
                     <div className="row gx-4 gx-lg-5 justify-content-center">
