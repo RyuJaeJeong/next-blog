@@ -3,11 +3,12 @@
 <mapper namespace="articleMapper">
 
     <insert id="insertArticle">
-        INSERT INTO t_artma01 (article_dt, article_seq, article_title, article_content, inp_id, inp_dttm, upd_id, upd_dttm)
+        INSERT INTO t_artma01 (article_dt, article_seq, article_title, article_sub_title, article_content, inp_id, inp_dttm, upd_id, upd_dttm)
              SELECT /* insertArticle */
                     TO_CHAR(now(), 'YYYYMMDD')
-                  , (SELECT COALESCE(MAX(T0.article_seq), 0) + 1 FROM t_artma01 T0 WHERE T0.article_dt=TO_CHAR(now(), 'YYYYMMDD')
+                  , (SELECT COALESCE(MAX(T0.article_seq), 0) + 1 FROM t_artma01 T0 WHERE T0.article_dt=TO_CHAR(now(), 'YYYYMMDD'))
                   , #{title}
+                  , #{subTitle}
                   , #{content}
                   , #{userId}
                   , now()
@@ -19,6 +20,7 @@
         SELECT T1.article_dt                                  AS "articleDt"
             ,  T1.article_seq                                 AS "articleSeq"
             ,  T1.article_title                               AS "articleTitle"
+            ,  T1.article_sub_title                           AS "articleSubTitle"
             ,  T1.article_content                             AS "articleContent"
             ,  T1.inp_id                                      AS "inpId"
             ,  T2.name                                        AS "inpNm"

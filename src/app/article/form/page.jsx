@@ -52,27 +52,41 @@ const Form = ()=>{
                                                name="title"
                                                className="form-control"
                                                {...register("title", {
-                                                    required: "제목은 필수 입력입니다.",
-                                                    minLength: {
-                                                        value: 2,
-                                                        message: "제목은 2글자 이상입니다."
-                                                    },
-                                                    maxLength: {
-                                                        value: 20,
-                                                        message: "제목은 최대 255자 까지입니다."
-                                                    }
+                                                   required: "제목은 필수 입력입니다.",
+                                                   minLength: {
+                                                       value: 2,
+                                                       message: "제목은 2글자 이상입니다."
+                                                   },
+                                                   maxLength: {
+                                                       value: 255,
+                                                       message: "제목은 최대 255자 까지입니다."
+                                                   }
                                                })}
                                         />
                                         <label htmlFor="title">Title</label>
-                                        {errors.title && <HelpMessageDanger message={`[ERROR]: ${errors.title.message}`} />}
+                                        {errors.title && <HelpMessageDanger message={`[ERROR]: ${errors.title.message}`}/>}
+                                    </div>
+                                    <div className="form-floating">
+                                        <input type="text"
+                                               id="subTitle"
+                                               name="subTitle"
+                                               className="form-control"
+                                               {...register("subTitle", {
+                                                   maxLength: {
+                                                       value: 255,
+                                                       message: "부제목은 최대 255자 까지입니다."
+                                                   }
+                                               })}
+                                        />
+                                        <label htmlFor="subTitle">Sub Title</label>
                                     </div>
                                     <div className="form-floating">
                                         <p className={Styles.editorLabel}>Content</p>
                                         <Editor id="content" name="content" setValue={setValue} className={`form-control ${Styles.editorBody}`}/>
-                                        {!errors.title && errors.content && <HelpMessageDanger message={`[ERROR]: ${errors.content.message}`} />}
+                                        {!errors.title && errors.content && <HelpMessageDanger message={`[ERROR]: ${errors.content.message}`}/>}
                                     </div>
                                     <br/>
-                                    <button type="submit" id="btnSubmit" className="btn btn-primary text-uppercase" disabled={isSubmitting} >
+                                    <button type="submit" id="btnSubmit" className="btn btn-primary text-uppercase" disabled={isSubmitting}>
                                         Send
                                     </button>
                                 </form>
