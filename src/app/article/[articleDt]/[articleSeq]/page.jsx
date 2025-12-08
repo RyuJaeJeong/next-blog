@@ -8,7 +8,7 @@ import * as React from "react";
 const Article = async (props) => {
     const params = await props.params;
     const { articleDt, articleSeq } = params;
-    const articleResponse = await fetch(`http://localhost:3000/api/article/${articleDt}/${articleSeq}`);
+    const articleResponse = await fetch(`${process.env.API_URL}/api/article/${articleDt}/${articleSeq}`);
     const articlePayload = await articleResponse.json();
     if(articlePayload.code == 404) notFound();
     const { articleTitle, articleContent, inpNm, inpDttm } = articlePayload.data
@@ -22,7 +22,7 @@ const Article = async (props) => {
                             <Viewer content={articleContent} />
                             <div className="w-100">
                                 <Link href={"/article"} className="btn btn-primary text-uppercase">
-                                    <i class="fa-solid fa-arrow-left-long"></i> List
+                                    <i className="fa-solid fa-arrow-left-long"></i> List
                                 </Link>
                             </div>
                         </div>
