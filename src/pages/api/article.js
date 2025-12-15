@@ -8,7 +8,8 @@ const handler = async(req, res)=>{
             var conn = await pool.connect();
             const param = JSON.parse(req.body);
             const session = await getServerSession(req, res, authOptions);
-            const userId = session.user.id;
+            console.log(session)
+            const userId = session?.user?.id || param.userId;
             param.userId = userId;
             const sql = mybatisMapper.getStatement("articleMapper", "insertArticle", param);
             console.log(sql);
