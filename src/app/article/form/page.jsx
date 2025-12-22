@@ -1,13 +1,15 @@
 "use client"
-import Header from '@/component/header'
-import Editor from '@/component/tiptap/editor'
-import Styles from '@/app/article/form/page.module.css'
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
-import { HelpMessageDanger, HelpMessageSuccess, HelpMessage } from '@/component/helpMessage'
+
+
 import * as React from "react";
-import {useRouter} from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import Editor from '@/component/tiptap/editor'
+import Header from '@/component/header'
+import { HelpMessageDanger, HelpMessageSuccess, HelpMessage } from '@/component/helpMessage'
+import Styles from '@/app/article/form/page.module.css'
 
 
 const Form = ()=>{
@@ -21,10 +23,19 @@ const Form = ()=>{
 
     const doSubmit = async (data) => {
         try{
+            const formData = new FormData();
+            for (const key in data) {
+                if (Object.hasOwnProperty.call(data, key)) {
+                    console.log(key);
+                    if(key === 'headImage') formData.append('headImage', data[key][0])
+                    else formData.append(key, data[key]);
+                }
+            }
             const response = await fetch('/api/article', {
                 method: 'POST',
-                body: JSON.stringify(data)
+                body: formData
             });
+
             const payload = await response.json();
             if(payload.code == 500){
                 throw new Error(payload.msg);
@@ -36,6 +47,7 @@ const Form = ()=>{
             toast.error(e.message)
         }
     }
+
     return(
         <>
             <Header image={"/contact-bg.webp"} head={"Form Page"} subhead={"Have questions? I have answers"} meta={""} isPost={false}/>
@@ -80,13 +92,24 @@ const Form = ()=>{
                                         />
                                         <label htmlFor="subTitle">Sub Title</label>
                                     </div>
+                                    <div className="mt-1">
+                                        <p className={Styles.fileLabel}>File</p>
+                                        <input type="file"
+                                               id="headImage"
+                                               name="headImage"
+                                               className={`form-control ${Styles.customFileTag}`}
+                                               {...register("headImage")}
+                                        />
+                                        {!errors.title && errors.headImage && <HelpMessageDanger message={`[ERROR]: ${errors.title.message}`}/>}
+                                    </div>
                                     <div className="form-floating">
                                         <p className={Styles.editorLabel}>Content</p>
                                         <Editor id="content" name="content" setValue={setValue} className={`form-control ${Styles.editorBody}`}/>
                                         {!errors.title && errors.content && <HelpMessageDanger message={`[ERROR]: ${errors.content.message}`}/>}
                                     </div>
                                     <br/>
-                                    <button type="submit" id="btnSubmit" className="btn btn-primary text-uppercase" disabled={isSubmitting}>
+                                    <button type="submit" id="btnSubmit" className="btn btn-primary text-uppercase"
+                                            disabled={isSubmitting}>
                                         Send
                                     </button>
                                 </form>

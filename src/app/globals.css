@@ -10827,5 +10827,6 @@ html, body, #__next {
   margin: 0.5em 0;
 }
 
-
-
+input::-webkit-file-upload-button{
+  border: 0 !important;
+}

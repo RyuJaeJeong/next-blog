@@ -17,7 +17,8 @@
     </insert>
 
     <select id="selectArticle">
-        SELECT T1.article_dt                                  AS "articleDt"
+        SELECT /* selectArticle */
+               T1.article_dt                                  AS "articleDt"
             ,  T1.article_seq                                 AS "articleSeq"
             ,  T1.article_title                               AS "articleTitle"
             ,  T1.article_sub_title                           AS "articleSubTitle"
