@@ -2,13 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="articleMapper">
 
+    <insert id="insertHeadImage">
+        INSERT INTO t_artma02(image_url, image_download_url, image_original_nm, image_save_nm, inp_id, upd_id)
+             VALUES(#{imageUrl}, #{imageDownloadUrl}, #{imageOriginalNm}, #{imageSaveNm}, #{userId}, #{userId})
+          RETURNING image_id AS "imageId"
+    </insert>
+
     <insert id="insertArticle">
-        INSERT INTO t_artma01 (article_dt, article_seq, article_title, article_sub_title, article_content, inp_id, inp_dttm, upd_id, upd_dttm)
+        INSERT INTO t_artma01 (article_dt, article_seq, article_title, article_sub_title, head_image_id, article_content, inp_id, inp_dttm, upd_id, upd_dttm)
              SELECT /* insertArticle */
                     TO_CHAR(now(), 'YYYYMMDD')
                   , (SELECT COALESCE(MAX(T0.article_seq), 0) + 1 FROM t_artma01 T0 WHERE T0.article_dt=TO_CHAR(now(), 'YYYYMMDD'))
                   , #{title}
                   , #{subTitle}
+                  , #{headImageId}
                   , #{content}
                   , #{userId}
                   , now()
@@ -26,8 +33,11 @@
             ,  T1.inp_id                                      AS "inpId"
             ,  T2.name                                        AS "inpNm"
             ,  to_char(T1.inp_dttm, 'YYYY년 MM월 DD일')        AS "inpDttm"
+            ,  T3.image_url                                   AS "imageUrl"
           FROM t_artma01 T1 INNER JOIN users T2
             ON T1.inp_id = T2.id
+                             LEFT JOIN t_artma02 T3
+            ON T1.head_image_id = T3.image_id
          WHERE T1.article_dt = #{articleDt}
            AND T1.article_seq = #{articleSeq}
     </select>
