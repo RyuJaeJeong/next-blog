@@ -19,6 +19,7 @@ const handler = async(req, res)=>{
             const session = await getServerSession(req, res, authOptions);
             const userId = session?.user?.id;
             const uploadDir = path.join(process.cwd(), "tmp");
+            if(!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
             const form = formidable({
                 uploadDir: uploadDir,
                 keepExtensions: true,
