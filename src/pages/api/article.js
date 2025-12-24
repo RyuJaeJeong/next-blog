@@ -5,6 +5,7 @@ import path from 'path';
 import { put } from '@vercel/blob';
 import { pool, mybatisMapper } from "@/lib/db";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import os from 'os';
 
 export const config = {
     api: {
@@ -18,7 +19,7 @@ const handler = async(req, res)=>{
         try{
             const session = await getServerSession(req, res, authOptions);
             const userId = session?.user?.id;
-            const uploadDir = path.join(process.cwd(), "tmp");
+            const uploadDir = os.tmpdir()
             if(!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
             const form = formidable({
                 uploadDir: uploadDir,
