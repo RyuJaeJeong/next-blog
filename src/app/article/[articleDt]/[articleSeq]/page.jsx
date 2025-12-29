@@ -14,7 +14,7 @@ const Article = async (props) => {
     const { articleTitle, articleSubTitle, articleContent, imageUrl, inpNm, inpDttm } = articlePayload.data
     return(
         <>
-            <Header image={imageUrl?imageUrl:"/post-bg.webp"} head={articleTitle} subhead={articleSubTitle} meta={`${inpDttm}, ${inpNm}에 의해 작성됨`} isPost={true}/>
+            <Header image={imageUrl} head={articleTitle} subhead={articleSubTitle} meta={`${inpDttm}, ${inpNm}에 의해 작성됨`} isPost={true}/>
             <div className="mb-4">
                 <div className="container px-4 px-lg-5">
                     <div className="row gx-4 gx-lg-5 justify-content-center">

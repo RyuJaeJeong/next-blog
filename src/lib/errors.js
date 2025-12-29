@@ -1,3 +1,11 @@
+export class ValidationError extends Error{
+    constructor(message) {
+        super(message);
+        this.name = "ValidationError";
+        this.code = 'E_VALIDATION_CHECK_FAILED'
+    }
+}
+
 export class VerificationError extends Error {
     constructor(message="이메일 인증에 실패하였습니다.") {
         super(message);

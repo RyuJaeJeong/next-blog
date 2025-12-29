@@ -33,7 +33,7 @@
             ,  T1.inp_id                                      AS "inpId"
             ,  T2.name                                        AS "inpNm"
             ,  to_char(T1.inp_dttm, 'YYYY년 MM월 DD일')        AS "inpDttm"
-            ,  T3.image_url                                   AS "imageUrl"
+            ,  COALESCE(T3.image_url, '/post-bg.webp')        AS "imageUrl"
           FROM t_artma01 T1 INNER JOIN users T2
             ON T1.inp_id = T2.id
                              LEFT JOIN t_artma02 T3
